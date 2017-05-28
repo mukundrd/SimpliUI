@@ -28,7 +28,7 @@ stages:
 BuildBinary:
   stage: build
   only:
-    - develop
+    - master
   script:
     - ./gradlew assembleDebug
   artifacts:
