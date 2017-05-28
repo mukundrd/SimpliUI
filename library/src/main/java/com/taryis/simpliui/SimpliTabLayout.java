@@ -245,12 +245,8 @@ public class SimpliTabLayout extends HorizontalScrollView {
         mTabTextAppearance = a.getResourceId(android.support.design.R.styleable.TabLayout_tabTextAppearance,
                 android.support.design.R.style.TextAppearance_Design_Tab);
 
-        a = context.obtainStyledAttributes(attrs, R.styleable.MyTabLayout);
-        mTabStrip.setSelectedIndicatorWidth(a.getDimensionPixelSize(R.styleable.MyTabLayout_tabIndicatorWidth, 0));
-
         // Text colors/sizes come from the text appearance first
-        final TypedArray ta = context.obtainStyledAttributes(mTabTextAppearance,
-                android.support.v7.appcompat.R.styleable.TextAppearance);
+        final TypedArray ta = context.obtainStyledAttributes(mTabTextAppearance, android.support.v7.appcompat.R.styleable.TextAppearance);
         try {
             mTabTextSize = ta.getDimensionPixelSize(
                     android.support.v7.appcompat.R.styleable.TextAppearance_android_textSize, 0);
@@ -273,14 +269,16 @@ public class SimpliTabLayout extends HorizontalScrollView {
             mTabTextColors = createColorStateList(mTabTextColors.getDefaultColor(), selected);
         }
 
-        mRequestedTabMinWidth = a.getDimensionPixelSize(android.support.design.R.styleable.TabLayout_tabMinWidth,
-                INVALID_WIDTH);
-        mRequestedTabMaxWidth = a.getDimensionPixelSize(android.support.design.R.styleable.TabLayout_tabMaxWidth,
-                INVALID_WIDTH);
+        mRequestedTabMinWidth = a.getDimensionPixelSize(android.support.design.R.styleable.TabLayout_tabMinWidth, INVALID_WIDTH);
+        mRequestedTabMaxWidth = a.getDimensionPixelSize(android.support.design.R.styleable.TabLayout_tabMaxWidth, INVALID_WIDTH);
         mTabBackgroundResId = a.getResourceId(android.support.design.R.styleable.TabLayout_tabBackground, 0);
         mContentInsetStart = a.getDimensionPixelSize(android.support.design.R.styleable.TabLayout_tabContentStart, 0);
         mMode = a.getInt(android.support.design.R.styleable.TabLayout_tabMode, MODE_FIXED);
         mTabGravity = a.getInt(android.support.design.R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
+        a.recycle();
+
+        a = context.obtainStyledAttributes(attrs, R.styleable.MyTabLayout);
+        mTabStrip.setSelectedIndicatorWidth(a.getDimensionPixelSize(R.styleable.MyTabLayout_tabIndicatorWidth, 0));
         a.recycle();
 
         // TODO add attr for these
@@ -326,8 +324,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
         setScrollPosition(position, positionOffset, updateSelectedText, true);
     }
 
-    void setScrollPosition(int position, float positionOffset, boolean updateSelectedText,
-                           boolean updateIndicatorPosition) {
+    void setScrollPosition(int position, float positionOffset, boolean updateSelectedText, boolean updateIndicatorPosition) {
         final int roundedPosition = Math.round(position + positionOffset);
         if (roundedPosition < 0 || roundedPosition >= mTabStrip.getChildCount()) {
             return;
@@ -967,10 +964,8 @@ public class SimpliTabLayout extends HorizontalScrollView {
 
             if (remeasure) {
                 // Re-measure the child with a widthSpec set to be exactly our measure width
-                int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingTop()
-                        + getPaddingBottom(), child.getLayoutParams().height);
-                int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
-                        getMeasuredWidth(), MeasureSpec.EXACTLY);
+                int childHeightMeasureSpec = getChildMeasureSpec(heightMeasureSpec, getPaddingTop() + getPaddingBottom(), child.getLayoutParams().height);
+                int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY);
                 child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
             }
         }
@@ -1432,16 +1427,13 @@ public class SimpliTabLayout extends HorizontalScrollView {
         public TabView(Context context) {
             super(context);
             if (mTabBackgroundResId != 0) {
-                ViewCompat.setBackground(
-                        this, AppCompatResources.getDrawable(context, mTabBackgroundResId));
+                ViewCompat.setBackground(this, AppCompatResources.getDrawable(context, mTabBackgroundResId));
             }
-            ViewCompat.setPaddingRelative(this, mTabPaddingStart, mTabPaddingTop,
-                    mTabPaddingEnd, mTabPaddingBottom);
+            ViewCompat.setPaddingRelative(this, mTabPaddingStart, mTabPaddingTop, mTabPaddingEnd, mTabPaddingBottom);
             setGravity(Gravity.CENTER);
             setOrientation(VERTICAL);
             setClickable(true);
-            ViewCompat.setPointerIcon(this,
-                    PointerIconCompat.getSystemIcon(getContext(), PointerIconCompat.TYPE_HAND));
+            ViewCompat.setPointerIcon(this, PointerIconCompat.getSystemIcon(getContext(), PointerIconCompat.TYPE_HAND));
         }
 
         @Override
@@ -1488,7 +1480,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
         public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
             super.onInitializeAccessibilityEvent(event);
             // This view masquerades as an action bar tab.
-            event.setClassName(ActionBar.Tab.class.getName());
+            event.setClassName(Tab.class.getName());
         }
 
         @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -1496,7 +1488,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
         public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
             super.onInitializeAccessibilityNodeInfo(info);
             // This view masquerades as an action bar tab.
-            info.setClassName(ActionBar.Tab.class.getName());
+            info.setClassName(Tab.class.getName());
         }
 
         @Override
@@ -1643,8 +1635,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
             setSelected(tab != null && tab.isSelected());
         }
 
-        private void updateTextAndIcon(@Nullable final TextView textView,
-                                       @Nullable final ImageView iconView) {
+        private void updateTextAndIcon(@Nullable final TextView textView, @Nullable final ImageView iconView) {
             final Drawable icon = mTab != null ? mTab.getIcon() : null;
             final CharSequence text = mTab != null ? mTab.getText() : null;
             final CharSequence contentDesc = mTab != null ? mTab.getContentDescription() : null;
@@ -1712,12 +1703,10 @@ public class SimpliTabLayout extends HorizontalScrollView {
                 referenceX = screenWidth - referenceX; // mirror
             }
 
-            Toast cheatSheet = Toast.makeText(context, mTab.getContentDescription(),
-                    Toast.LENGTH_SHORT);
+            Toast cheatSheet = Toast.makeText(context, mTab.getContentDescription(), Toast.LENGTH_SHORT);
             if (midy < displayFrame.height()) {
                 // Show below the tab view
-                cheatSheet.setGravity(Gravity.TOP | GravityCompat.END, referenceX,
-                        screenPos[1] + height - displayFrame.top);
+                cheatSheet.setGravity(Gravity.TOP | GravityCompat.END, referenceX, screenPos[1] + height - displayFrame.top);
             } else {
                 // Show along the bottom center
                 cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
@@ -1836,8 +1825,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
                     // If the tabs fit within our width minus gutters, we will set all tabs to have
                     // the same width
                     for (int i = 0; i < count; i++) {
-                        final LayoutParams lp =
-                                (LayoutParams) getChildAt(i).getLayoutParams();
+                        final LayoutParams lp = (LayoutParams) getChildAt(i).getLayoutParams();
                         if (lp.width != largestTabWidth || lp.weight != 0) {
                             lp.width = largestTabWidth;
                             lp.weight = 0;
@@ -1868,8 +1856,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
                 // new animation with the remaining duration
                 mIndicatorAnimator.cancel();
                 final long duration = mIndicatorAnimator.getDuration();
-                animateIndicatorToPosition(mSelectedPosition,
-                        Math.round((1f - mIndicatorAnimator.getAnimatedFraction()) * duration));
+                animateIndicatorToPosition(mSelectedPosition, Math.round((1f - mIndicatorAnimator.getAnimatedFraction()) * duration));
             } else {
                 // If we've been layed out, update the indicator position
                 updateIndicatorPosition();
@@ -1887,10 +1874,8 @@ public class SimpliTabLayout extends HorizontalScrollView {
                 if (mSelectionOffset > 0f && mSelectedPosition < getChildCount() - 1) {
                     // Draw the selection partway between the tabs
                     View nextTitle = getChildAt(mSelectedPosition + 1);
-                    left = (int) (mSelectionOffset * nextTitle.getLeft() +
-                            (1.0f - mSelectionOffset) * left);
-                    right = (int) (mSelectionOffset * nextTitle.getRight() +
-                            (1.0f - mSelectionOffset) * right);
+                    left = (int) (mSelectionOffset * nextTitle.getLeft() + (1.0f - mSelectionOffset) * left);
+                    right = (int) (mSelectionOffset * nextTitle.getRight() + (1.0f - mSelectionOffset) * right);
                 }
             } else {
                 left = right = -1;
@@ -1913,8 +1898,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
                 mIndicatorAnimator.cancel();
             }
 
-            final boolean isRtl = ViewCompat.getLayoutDirection(this)
-                    == ViewCompat.LAYOUT_DIRECTION_RTL;
+            final boolean isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL;
 
             final View targetView = getChildAt(position);
             if (targetView == null) {
