@@ -1,4 +1,4 @@
-package com.taryis.simpliui;
+package com.taryis.simpliui.utils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

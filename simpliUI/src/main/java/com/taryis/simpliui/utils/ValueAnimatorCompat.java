@@ -1,4 +1,4 @@
-package com.taryis.simpliui;
+package com.taryis.simpliui.utils;
 
 /**
  * Created by klogi on 12/23/2015.
@@ -11,7 +11,7 @@ import android.view.animation.Interpolator;
  * <p>
  * You shouldn't not instantiate this directly. Instead use {@code ViewUtils.createAnimator()}.
  */
-class ValueAnimatorCompat {
+public class ValueAnimatorCompat {
 
     public void addListener(final AnimatorListener listener) {
         if (listener != null) {
@@ -36,7 +36,7 @@ class ValueAnimatorCompat {
         }
     }
 
-    interface AnimatorUpdateListener {
+    public interface AnimatorUpdateListener {
         /**
          * <p>Notifies the occurrence of another frame of the animation.</p>
          *
@@ -50,7 +50,7 @@ class ValueAnimatorCompat {
      * Notifications indicate animation related events, such as the end or the
      * repetition of the animation.
      */
-    interface AnimatorListener {
+    public interface AnimatorListener {
         /**
          * <p>Notifies the start of the animation.</p>
          *
@@ -75,7 +75,7 @@ class ValueAnimatorCompat {
         void onAnimationCancel(ValueAnimatorCompat animator);
     }
 
-    static class AnimatorListenerAdapter implements AnimatorListener {
+    public static class AnimatorListenerAdapter implements AnimatorListener {
         @Override
         public void onAnimationStart(ValueAnimatorCompat animator) {
         }

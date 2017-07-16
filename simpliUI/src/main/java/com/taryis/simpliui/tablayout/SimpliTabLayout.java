@@ -1,4 +1,4 @@
-package com.taryis.simpliui;
+package com.taryis.simpliui.tablayout;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -19,7 +19,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StringRes;
-import android.support.design.widget.TabLayout;
 import android.support.v4.util.Pools;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -46,6 +45,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.taryis.simpliui.R;
+import com.taryis.simpliui.utils.AnimationUtils;
+import com.taryis.simpliui.utils.ThemeUtils;
+import com.taryis.simpliui.utils.ValueAnimatorCompat;
+import com.taryis.simpliui.utils.ViewUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -270,8 +275,8 @@ public class SimpliTabLayout extends HorizontalScrollView {
         mTabGravity = a.getInt(android.support.design.R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
         a.recycle();
 
-        a = context.obtainStyledAttributes(attrs, R.styleable.MyTabLayout);
-        mTabStrip.setSelectedIndicatorWidth(a.getDimensionPixelSize(R.styleable.MyTabLayout_tabIndicatorWidth, 0));
+        a = context.obtainStyledAttributes(attrs, R.styleable.TabLayout);
+        mTabStrip.setSelectedIndicatorWidth(a.getDimensionPixelSize(R.styleable.TabLayout_tabIndicatorWidth, 0));
         a.recycle();
 
         // TODO add attr for these
@@ -287,7 +292,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
      * Sets the tab indicator's color for the currently selected tab.
      *
      * @param color color to use for the indicator
-     * ref android.support.design.R.styleable#TabLayout_tabIndicatorColor
+     *              ref android.support.design.R.styleable#TabLayout_tabIndicatorColor
      */
     public void setSelectedTabIndicatorColor(@ColorInt int color) {
         mTabStrip.setSelectedIndicatorColor(color);
@@ -297,7 +302,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
      * Sets the tab indicator's height for the currently selected tab.
      *
      * @param height height to use for the indicator in pixels
-     * ref android.support.design.R.styleable#TabLayout_tabIndicatorHeight
+     *               ref android.support.design.R.styleable#TabLayout_tabIndicatorHeight
      */
     public void setSelectedTabIndicatorHeight(int height) {
         mTabStrip.setSelectedIndicatorHeight(height);
@@ -558,7 +563,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
      * </ul>
      *
      * @param mode one of MODE_FIXED or MODE_SCROLLABLE.
-     * ref android.support.design.R.styleable#TabLayout_tabMode
+     *             ref android.support.design.R.styleable#TabLayout_tabMode
      */
     public void setTabMode(@Mode int mode) {
         if (mode != mMode) {
@@ -581,7 +586,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
      * Set the gravity to use when laying out the tabs.
      *
      * @param gravity one of GRAVITY_CENTER or GRAVITY_FILL.
-     * ref android.support.design.R.styleable#TabLayout_tabGravity
+     *                ref android.support.design.R.styleable#TabLayout_tabGravity
      */
     public void setTabGravity(@TabGravity int gravity) {
         if (mTabGravity != gravity) {
@@ -622,7 +627,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
 
     /**
      * Sets the text colors for the different states (normal, selected) used for the tabs.
-     *
+     * <p>
      * ref android.support.design.R.styleable#TabLayout_tabTextColor
      * ref android.support.design.R.styleable#TabLayout_tabSelectedTextColor
      */

@@ -1,9 +1,9 @@
-package com.taryis.simpliui;
+package com.taryis.simpliui.utils;
 
 import android.os.Build;
 import android.view.View;
 
-class ViewUtils {
+public class ViewUtils {
 
     static final ValueAnimatorCompat.Creator DEFAULT_ANIMATOR_CREATOR
             = new ValueAnimatorCompat.Creator() {
@@ -42,11 +42,11 @@ class ViewUtils {
         }
     }
 
-    static void setBoundsViewOutlineProvider(View view) {
+    public static void setBoundsViewOutlineProvider(View view) {
         IMPL.setBoundsViewOutlineProvider(view);
     }
 
-    static ValueAnimatorCompat createAnimator() {
+    public static ValueAnimatorCompat createAnimator() {
         return DEFAULT_ANIMATOR_CREATOR.createAnimator();
     }
 

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="MyTabLayout">
+
+    <declare-styleable name="TabLayout">
         <attr name="tabIndicatorWidth" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="OnboardingView">
+        <attr name="overlay" format="color" />
+        <attr name="overlayDrawable" format="reference" />
+    </declare-styleable>
+
 </resources>

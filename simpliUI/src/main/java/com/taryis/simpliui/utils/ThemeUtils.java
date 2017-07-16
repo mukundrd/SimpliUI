@@ -1,13 +1,15 @@
-package com.taryis.simpliui;
+package com.taryis.simpliui.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 
-class ThemeUtils {
+import com.taryis.simpliui.R;
 
-    private static final int[] APPCOMPAT_CHECK_ATTRS = { R.attr.colorPrimary };
+public class ThemeUtils {
 
-    static void checkAppCompatTheme(Context context) {
+    private static final int[] APPCOMPAT_CHECK_ATTRS = {R.attr.colorPrimary};
+
+    public static void checkAppCompatTheme(Context context) {
         TypedArray a = context.obtainStyledAttributes(APPCOMPAT_CHECK_ATTRS);
         final boolean failed = !a.hasValue(0);
         if (a != null) {
