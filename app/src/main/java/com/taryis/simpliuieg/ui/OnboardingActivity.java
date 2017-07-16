@@ -18,7 +18,7 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        OnboardingView view = (OnboardingView) findViewById(R.id.onboarding_view);
+        OnboardingView view = findViewById(R.id.onboarding_view);
         view.focusForView(findViewById(R.id.data), 0, "This is content");
 
     }
