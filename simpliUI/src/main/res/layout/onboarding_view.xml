@@ -1,46 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/onboarding_scrim"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:alpha="0"
     android:background="@android:color/transparent"
-    android:orientation="vertical">
+    android:visibility="invisible">
 
     <ImageView
         android:id="@+id/up_arrow"
-        android:layout_width="@dimen/onboarding_arrow_width"
-        android:layout_height="@dimen/onboarding_arrow_height"
+        android:layout_width="25dp"
+        android:layout_height="12.5dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:src="@drawable/triangle"
         android:tint="@android:color/white" />
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/message_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/up_arrow"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:background="@drawable/onboarding_msg_bg"
-        android:minHeight="40dp">
+        android:minHeight="40dp"
+        android:orientation="vertical"
+        android:padding="25dp">
 
         <TextView
             android:id="@+id/onboard_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_horizontal"
-            android:text="content"
-            android:textColor="#666666"
-            android:textSize="18sp"
-            android:visibility="gone" />
+            android:layout_marginTop="5dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:text="Its here"
+            android:textColor="#FF444444" />
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/btn_got_it"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:importantForAccessibility="yes">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:duplicateParentState="true"
+                android:focusable="false"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:text="Got it"
+                android:textColor="#FF444444" />
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/never_show_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:text="Never show me tips"
+            android:textColor="#FF444444" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/down_arrow"
-        android:layout_width="@dimen/onboarding_arrow_width"
-        android:layout_height="@dimen/onboarding_arrow_height"
+        android:layout_width="25dp"
+        android:layout_height="12.5dp"
         android:layout_below="@+id/message_holder"
         android:adjustViewBounds="true"
         android:rotation="180"

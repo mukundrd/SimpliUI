@@ -17,11 +17,20 @@
         android:text="Data"
         android:textSize="20sp" />
 
+    <ImageView
+        android:id="@+id/heart"
+        android:layout_width="50dp"
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_wishlist_on" />
+
     <com.taryis.simpliui.onboarding.OnboardingView
         android:id="@+id/onboarding_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#77000000"
-        app:position="bottom" />
+        android:visibility="gone" />
 
 </RelativeLayout>
