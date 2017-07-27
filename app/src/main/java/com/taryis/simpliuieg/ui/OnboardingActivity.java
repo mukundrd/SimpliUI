@@ -19,8 +19,7 @@ public class OnboardingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_onboarding);
 
         OnboardingView view = findViewById(R.id.onboarding_view);
-        view.focusForView(findViewById(R.id.data), 0, "This is content");
-
+        view.focusForViewWithPath(getString(R.string.svg_path), findViewById(R.id.data), null, OnboardingView.BubblePosition.BELOW_NO_CARAT, "This is content", 10);
     }
 
 }
