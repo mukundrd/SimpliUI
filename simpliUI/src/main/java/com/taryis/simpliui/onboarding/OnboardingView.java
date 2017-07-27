@@ -159,8 +159,11 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
         int viewWidth = mView.getWidth();
         int viewHeight = mView.getHeight();
 
-        int viewLeft = getRelativeLeft(mView);
-        int viewTop = getRelativeTop(mView);
+        int[] location = new int[2];
+        //mView.getLocationOnScreen(location);
+        mView.getLocationInWindow(location);
+        int viewLeft = location[0];
+        int viewTop = location[1];
         int viewRight = viewLeft + viewWidth;
         int viewBottom = viewTop + viewHeight;
 
@@ -265,7 +268,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
         addView(root);
     }
 
-    private int getRelativeLeft(View myView) {
+    /*private int getRelativeLeft(View myView) {
         View parent = (View) myView.getParent();
         if (parent == mParent || parent.getId() == Window.ID_ANDROID_CONTENT)
             return myView.getLeft();
@@ -275,11 +278,11 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
 
     private int getRelativeTop(View myView) {
         View parent = (View) myView.getParent();
-        if (parent == mParent || parent.getId() == Window.ID_ANDROID_CONTENT)
+        if (parent.getId() == Window.ID_ANDROID_CONTENT)
             return myView.getTop();
         else
             return myView.getTop() + getRelativeTop((View) myView.getParent());
-    }
+    }*/
 
     public void setOnClickCallbackListener(OnClickCallbackListener listener) {
         this.listener = listener;
