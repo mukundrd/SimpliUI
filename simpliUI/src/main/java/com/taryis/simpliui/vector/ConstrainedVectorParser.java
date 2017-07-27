@@ -1,12 +1,12 @@
 package com.taryis.simpliui.vector;
 
-public class LBAConstrainedVectorParser extends LBAVectorParser {
+public class ConstrainedVectorParser extends VectorParser {
 
   private float originalWidth, originalHeight;
   private float viewWidth, viewHeight;
 
-  private LBAConstrainedVectorParser(float originalWidth, float originalHeight, float viewWidth,
-                                     float viewHeight) {
+  private ConstrainedVectorParser(float originalWidth, float originalHeight, float viewWidth,
+                                  float viewHeight) {
     this.originalWidth = originalWidth;
     this.originalHeight = originalHeight;
     this.viewWidth = viewWidth;
@@ -14,11 +14,11 @@ public class LBAConstrainedVectorParser extends LBAVectorParser {
   }
 
   @Override protected float transformX(float x) {
-    return x * (float)viewWidth / (float)originalWidth;
+    return x * viewWidth / originalWidth;
   }
 
   @Override protected float transformY(float y) {
-    return y * (float)viewHeight / (float)originalHeight;
+    return y * viewHeight / originalHeight;
   }
 
   public static class Builder {
@@ -46,8 +46,8 @@ public class LBAConstrainedVectorParser extends LBAVectorParser {
       return this;
     }
 
-    public LBAConstrainedVectorParser build() {
-      return new LBAConstrainedVectorParser(originalWidth, originalHeight, viewWidth, viewHeight);
+    public ConstrainedVectorParser build() {
+      return new ConstrainedVectorParser(originalWidth, originalHeight, viewWidth, viewHeight);
     }
   }
 }

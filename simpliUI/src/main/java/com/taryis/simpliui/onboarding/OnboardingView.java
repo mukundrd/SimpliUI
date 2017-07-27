@@ -21,13 +21,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.taryis.simpliui.BuildConfig;
 import com.taryis.simpliui.R;
-import com.taryis.simpliui.vector.LBAVectorParser;
+import com.taryis.simpliui.vector.VectorParser;
 
 import java.text.ParseException;
 
@@ -76,7 +75,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
      * @param path          To provide vector path for create focus.
      * @param focusableView View, which needs to be focused for on-boarding tooltip.
      * @param parent        If the ficusable view is not directly on an activity, need to provided it's parent reference which is full screen.
-     * @param position      @{Link BubblePosition} should it be above or below the focusable view.
+     * @param position      BubblePosition should it be above or below the focusable view.
      * @param message       Information to be displayed on the tooltip.
      * @param padding       any padding required for the ficusable view.
      */
@@ -93,7 +92,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
     /**
      * @param focusableView View, which needs to be focused for on-boarding tooltip.
      * @param parent        If the ficusable view is not directly on an activity, need to provided it's parent reference which is full screen.
-     * @param position      @{Link BubblePosition} should it be above or below the focusable view.
+     * @param position      BubblePosition should it be above or below the focusable view.
      * @param message       Information to be displayed on the tooltip.
      * @param padding       any padding required for the ficusable view.
      */
@@ -175,7 +174,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
             canvas.drawRect(viewLeft, viewTop, viewRight, viewBottom, paint);
         } else {
             try {
-                Path path = new LBAVectorParser().parsePath(mPath);
+                Path path = new VectorParser().parsePath(mPath);
 
                 Matrix scaleMatrix = new Matrix();
                 RectF rectF1 = new RectF();
