@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DDDDDD"
@@ -26,7 +25,7 @@
         android:layout_marginBottom="20dp"
         android:src="@drawable/ic_wishlist_on" />
 
-    <com.taryis.simpliui.onboarding.OnboardingView
+    <com.trayis.simpliui.onboarding.OnboardingView
         android:id="@+id/onboarding_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

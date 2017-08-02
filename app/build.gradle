@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.0"
 
     defaultConfig {
-        applicationId "com.taryis.examples.bottomtab1"
+        applicationId "com.trayis.examples.bottomtab1"
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
