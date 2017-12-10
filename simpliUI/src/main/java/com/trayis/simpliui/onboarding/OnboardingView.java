@@ -21,10 +21,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.trayis.simpliui.BuildConfig;
 import com.trayis.simpliui.R;
 import com.trayis.simpliui.vector.VectorParser;
 
@@ -39,6 +39,8 @@ import static com.trayis.simpliui.onboarding.OnboardingView.BubblePosition.BELOW
  */
 public class OnboardingView extends CoordinatorLayout implements View.OnClickListener {
 
+    private static final String TAG = "OnboardingView";
+
     private static final long ANIMATION_DURATION = 150;
 
     private Bitmap background;
@@ -52,6 +54,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
     private String mPath;
     private View mParent;
     private View root;
+    private boolean mCarved;
 
     public OnboardingView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -74,33 +77,30 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
     /**
      * @param path          To provide vector path for create focus.
      * @param focusableView View, which needs to be focused for on-boarding tooltip.
-     * @param parent        If the ficusable view is not directly on an activity, need to provided it's parent reference which is full screen.
-     * @param position      BubblePosition should it be above or below the focusable view.
+     * @param parent        If the focusable view is not directly on an activity, need to provided it's parent reference which is full screen.
+     * @param position      @{Link BubblePosition} should it be above or below the focusable view.
      * @param message       Information to be displayed on the tooltip.
-     * @param padding       any padding required for the ficusable view.
+     * @param padding       Any padding required for the ficusable view.
      */
-    public void focusForViewWithPath(String path, View focusableView, View parent, int position, String message, int padding) {
-        if (TextUtils.isEmpty(path)) {
+    public void focusForView(String path, View focusableView, View parent, int position, String message, int padding) {
+        focusForView(path, focusableView, parent, position, message, padding, false);
+    }
+
+    /**
+     * @param path          To provide vector path for create focus.
+     * @param focusableView View, which needs to be focused for on-boarding tooltip.
+     * @param parent        If the focusable view is not directly on an activity, need to provided it's parent reference which is full screen.
+     * @param position      @{Link BubblePosition} should it be above or below the focusable view.
+     * @param message       Information to be displayed on the tooltip.
+     * @param padding       Any padding required for the ficusable view.
+     * @param force         Force focusing of view even it's already focused
+     */
+    public void focusForView(String path, View focusableView, View parent, int position, String message, int padding, boolean force) {
+        if ((focusableView == null || (mView != null && mView == focusableView)) && !force) {
             return;
         }
 
         mPath = path;
-
-        focusForView(focusableView, parent, position, message, padding);
-    }
-
-    /**
-     * @param focusableView View, which needs to be focused for on-boarding tooltip.
-     * @param parent        If the ficusable view is not directly on an activity, need to provided it's parent reference which is full screen.
-     * @param position      BubblePosition should it be above or below the focusable view.
-     * @param message       Information to be displayed on the tooltip.
-     * @param padding       any padding required for the ficusable view.
-     */
-    public void focusForView(View focusableView, View parent, int position, String message, int padding) {
-        if (focusableView == null || (mView != null && mView == focusableView)) {
-            return;
-        }
-
         background = null;
         mView = focusableView;
         mParent = parent;
@@ -130,12 +130,18 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
                             height = parentView.getHeight();
                         }
                     }
+
+                    if (width == 0 || height == 0) {
+                        return;
+                    }
+
                     background = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                     background.eraseColor(ContextCompat.getColor(getContext(), R.color.defaultOnboardingScrim));
                 }
 
                 if (mView != null) {
                     carveForView();
+                    mCarved = true;
                     if (getVisibility() != VISIBLE) {
                         setVisibility(VISIBLE);
                     }
@@ -145,11 +151,8 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
     }
 
     private void carveForView() {
-        Bitmap bitmap = Bitmap.createBitmap(background.getWidth(), background.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-
+        Canvas canvas = new Canvas(background);
         Paint paint = new Paint();
-        canvas.drawBitmap(background, 0, 0, paint);
         paint.setAntiAlias(true);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 
@@ -158,17 +161,10 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
         int viewWidth = mView.getWidth();
         int viewHeight = mView.getHeight();
 
-        int[] location = new int[2];
-        //mView.getLocationOnScreen(location);
-        mView.getLocationInWindow(location);
-        int viewLeft = location[0];
-        int viewTop = location[1];
+        int viewLeft = getRelativeLeft(mView);
+        int viewTop = getRelativeTop(mView);
         int viewRight = viewLeft + viewWidth;
         int viewBottom = viewTop + viewHeight;
-
-        if (BuildConfig.DEBUG) {
-            Log.v("OnboardingView", String.format("specs (%1$d, %2$d, %3$d, %4$d)", viewLeft, viewTop, viewRight, viewBottom));
-        }
 
         if (TextUtils.isEmpty(mPath)) {
             canvas.drawRect(viewLeft, viewTop, viewRight, viewBottom, paint);
@@ -179,7 +175,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
                 Matrix scaleMatrix = new Matrix();
                 RectF rectF1 = new RectF();
                 path.computeBounds(rectF1, true);
-                scaleMatrix.setScale((viewWidth)/rectF1.width(), (viewHeight)/rectF1.height(), rectF1.centerX(), rectF1.centerY());
+                scaleMatrix.setScale(viewWidth / rectF1.width(), viewHeight / rectF1.height(), rectF1.centerX(), rectF1.centerY());
                 path.transform(scaleMatrix);
 
                 RectF rectF2 = new RectF();
@@ -187,7 +183,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
 
                 float offW = rectF2.width() - rectF1.width();
                 float offH = rectF2.height() - rectF1.height();
-                path.offset(viewLeft + offW/2, viewTop + offH/2);
+                path.offset(viewLeft + offW / 2, viewTop + offH / 2);
 
                 canvas.drawPath(path, paint);
 
@@ -205,12 +201,11 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
                 canvas.drawPath(path, paint);
 
             } catch (ParseException e) {
-                e.printStackTrace();
-                Log.e("OnboardingView", e.getMessage(), e);
+                Log.e(TAG, e.getMessage(), e);
             }
         }
 
-        setBackground(new BitmapDrawable(resources, bitmap));
+        setBackground(new BitmapDrawable(resources, background));
 
         if (root != null) {
             View oldView = root;
@@ -224,6 +219,9 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
 
         root = LayoutInflater.from(getContext()).inflate(R.layout.onboarding_view, this, false);
         setOnClickListener(this);
+        root.findViewById(R.id.btn_got_it).setOnClickListener(this);
+        root.findViewById(R.id.never_show_link).setOnClickListener(this);
+        root.findViewById(R.id.message_holder).setOnClickListener(this);
 
         if (!TextUtils.isEmpty(mMessage)) {
             TextView message = root.findViewById(R.id.onboard_message);
@@ -240,17 +238,20 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
                 cParams.topMargin = viewBottom + offset;
                 if (mPosition == BELOW_NO_CARAT) {
                     findViewById(R.id.up_arrow).setVisibility(GONE);
+                    offset += mPadding;
                 } else {
                     arrow = findViewById(R.id.up_arrow);
                 }
+                cParams.topMargin = viewBottom + offset;
             } else {
                 findViewById(R.id.up_arrow).setVisibility(GONE);
-                cParams.topMargin = (int) ((viewTop + 2.5 * offset) - (offset + root.getHeight()));
                 if (mPosition == ABOVE_NO_CARAT) {
                     findViewById(R.id.down_arrow).setVisibility(GONE);
+                    offset += mPadding;
                 } else {
                     arrow = findViewById(R.id.down_arrow);
                 }
+                cParams.topMargin = (int) ((viewTop + 2.5 * offset) - (offset + root.getHeight()));
             }
             root.setLayoutParams(cParams);
 
@@ -267,7 +268,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
         addView(root);
     }
 
-    /*private int getRelativeLeft(View myView) {
+    private int getRelativeLeft(View myView) {
         View parent = (View) myView.getParent();
         if (parent == mParent || parent.getId() == Window.ID_ANDROID_CONTENT)
             return myView.getLeft();
@@ -281,7 +282,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
             return myView.getTop();
         else
             return myView.getTop() + getRelativeTop((View) myView.getParent());
-    }*/
+    }
 
     public void setOnClickCallbackListener(OnClickCallbackListener listener) {
         this.listener = listener;
@@ -289,18 +290,23 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        /*switch (v.getId()) {
-            case R.id.btn_got_it:
-                if (listener != null) {
-                    listener.onClickNext(mView);
-                }
-                break;
-            case R.id.never_show_link:
-                if (listener != null) {
-                    listener.onClickNeverShow();
-                }
-                break;
-        }*/
+        int i = v.getId();
+
+        if (i == R.id.btn_got_it) {
+            if (listener != null) {
+                listener.onClickNext(mView);
+            }
+
+        } else if (i == R.id.never_show_link) {
+            if (listener != null) {
+                listener.onClickNeverShow();
+            }
+
+        }
+    }
+
+    public boolean isCarved() {
+        return mCarved;
     }
 
     public interface OnClickCallbackListener {

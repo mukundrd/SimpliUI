@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Simpli UI</string>
+
+    <string name="location_enable_message">Your GPS seems to be disabled, you need to enable it to fetch location. Do you want to enable it?</string>
+    <string name="provider_settings_yes">Yes</string>
+    <string name="provider_settings_no">No</string>
+    <string name="snackbarText"><![CDATA[<font color=\"#FFFFFF\"><b>%s</b></font>]]></string>
+    <string name="settings">Settings</string>
+    <string name="permission_rationale_title">Permission required</string>
+    <string name="geo_location_permission_denied_feedback">Geo location permission is required to perform the action</string>
+    <string name="map_list_header_txt">Map list header txt</string>
 </resources>

@@ -4,4 +4,6 @@
     <dimen name="onboarding_arrow_height">15dp</dimen>
     <dimen name="size_10dp">5dp</dimen>
     <dimen name="size_50dp">25dp</dimen>
+    <dimen name="nominal_margin">5dp</dimen>
+    <dimen name="generic_margin">16dp</dimen>
 </resources>

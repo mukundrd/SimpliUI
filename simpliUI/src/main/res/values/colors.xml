@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="degaultOnboardingOverlay">#77000000</color>
+    <color name="colorPrimary">#777777</color>
+    <color name="colorPrimaryDark">#555555</color>
+    <color name="colorAccent">#FFCC00</color>
+
+    <color name="defaultOnboardingOverlay">#77000000</color>
     <color name="defaultOnboardingScrim">#66000000</color>
 </resources>
