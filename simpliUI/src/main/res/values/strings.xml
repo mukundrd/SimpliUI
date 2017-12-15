@@ -10,4 +10,11 @@
     <string name="permission_rationale_title">Permission required</string>
     <string name="geo_location_permission_denied_feedback">Geo location permission is required to perform the action</string>
     <string name="map_list_header_txt">Map list header txt</string>
+    <string name="its_here">Its here</string>
+    <string name="got_it">Got it</string>
+    <string name="never_show">Never show me tips</string>
+    <string name="cd_marker_icon">Marker Icon</string>
+    <string name="cd_location_fix_icon">location fix Icon</string>
+    <string name="cd_up_arrow">Up arrow</string>
+    <string name="cd_down_arrow">down arrow</string>
 </resources>

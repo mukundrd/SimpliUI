@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="onboarding_arrow_width">20dp</dimen>
-    <dimen name="onboarding_arrow_height">15dp</dimen>
     <dimen name="size_5dp">5dp</dimen>
     <dimen name="size_25dp">25dp</dimen>
     <dimen name="nominal_margin">5dp</dimen>

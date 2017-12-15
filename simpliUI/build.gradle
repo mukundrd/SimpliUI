@@ -6,12 +6,12 @@ def siteUrl = 'https://gitlab.com/Trayis/SimpliUI'      // Homepage URL of the l
 def gitUrl = 'https://gitlab.com/Trayis/SimpliUI.git'   // Git repository URL
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
@@ -37,6 +37,9 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+        disable 'RestrictedApi'
+        disable 'PrivateResource'
+        disable 'CustomViewStyleable'
 
         abortOnError false
     }
@@ -58,11 +61,11 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 
 group = 'com.trayis'    // Maven Group ID for the artifact
-version = '0.1.0'       // This is the library version used when deploying the artifact
+version = '0.1.1'       // This is the library version used when deploying the artifact
 
 install {
     repositories.mavenInstaller {

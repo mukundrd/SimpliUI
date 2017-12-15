@@ -21,6 +21,7 @@
 
             <ImageView
                 android:id="@+id/marker_icon_view"
+                android:contentDescription="@string/cd_marker_icon"
                 android:layout_width="30dp"
                 android:layout_height="36dp"
                 android:layout_centerInParent="true"
@@ -31,11 +32,14 @@
 
         <ImageView
             android:id="@+id/gps_location_fix"
+            android:contentDescription="@string/cd_location_fix_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="@dimen/generic_margin"
+            android:layout_marginEnd="@dimen/generic_margin"
             android:layout_marginRight="@dimen/generic_margin"
             android:background="@android:color/white"
             android:padding="2dp"
@@ -49,37 +53,32 @@
             android:layout_margin="@dimen/nominal_margin"
             android:background="@android:color/white">
 
-            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <com.trayis.simpliui.map.DelayAutoCompleteTextView
+                android:id="@+id/autoComplete"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginRight="35dp"
+                android:layout_marginTop="4dp"
+                android:background="@android:color/white"
+                android:dropDownWidth="fill_parent"
+                android:imeOptions="flagNoExtractUi|actionSearch"
+                android:inputType="textCapSentences"
+                android:padding="10dp" />
 
-                <com.trayis.simpliui.map.DelayAutoCompleteTextView
-                    android:id="@+id/autoComplete"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginEnd="35dp"
-                    android:layout_marginRight="35dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@android:color/white"
-                    android:dropDownWidth="fill_parent"
-                    android:imeOptions="flagNoExtractUi|actionSearch"
-                    android:inputType="textCapSentences"
-                    android:padding="10dp" />
-
-                <ImageView
-                    android:id="@+id/geo_autocomplete_clear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginRight="12dp"
-                    android:contentDescription="@string/map_list_header_txt"
-                    android:src="@android:drawable/ic_delete"
-                    android:tint="@color/colorPrimary"
-                    android:visibility="gone" />
-            </FrameLayout>
+            <ImageView
+                android:id="@+id/geo_autocomplete_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:contentDescription="@string/map_list_header_txt"
+                android:src="@android:drawable/ic_delete"
+                android:tint="@color/colorPrimary"
+                android:visibility="gone" />
         </FrameLayout>
 
     </RelativeLayout>

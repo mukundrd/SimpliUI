@@ -78,7 +78,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
      * @param path          To provide vector path for create focus.
      * @param focusableView View, which needs to be focused for on-boarding tooltip.
      * @param parent        If the focusable view is not directly on an activity, need to provided it's parent reference which is full screen.
-     * @param position      @{Link BubblePosition} should it be above or below the focusable view.
+     * @param position      BubblePosition should it be above or below the focusable view.
      * @param message       Information to be displayed on the tooltip.
      * @param padding       Any padding required for the ficusable view.
      */
@@ -90,7 +90,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
      * @param path          To provide vector path for create focus.
      * @param focusableView View, which needs to be focused for on-boarding tooltip.
      * @param parent        If the focusable view is not directly on an activity, need to provided it's parent reference which is full screen.
-     * @param position      @{Link BubblePosition} should it be above or below the focusable view.
+     * @param position      BubblePosition should it be above or below the focusable view.
      * @param message       Information to be displayed on the tooltip.
      * @param padding       Any padding required for the ficusable view.
      * @param force         Force focusing of view even it's already focused
