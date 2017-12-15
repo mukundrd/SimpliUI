@@ -232,7 +232,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
         post(() -> {
             LayoutParams cParams = (LayoutParams) root.getLayoutParams();
             View arrow = null;
-            int offset = resources.getDimensionPixelOffset(R.dimen.size_10dp);
+            int offset = resources.getDimensionPixelOffset(R.dimen.size_5dp);
             if (mPosition == BELOW || mPosition == BELOW_NO_CARAT) {
                 findViewById(R.id.down_arrow).setVisibility(GONE);
                 cParams.topMargin = viewBottom + offset;
@@ -257,7 +257,7 @@ public class OnboardingView extends CoordinatorLayout implements View.OnClickLis
 
             if (arrow != null) {
                 RelativeLayout.LayoutParams rParams = (RelativeLayout.LayoutParams) arrow.getLayoutParams();
-                rParams.leftMargin = viewLeft + mView.getWidth() / 2 - resources.getDimensionPixelOffset(R.dimen.size_50dp) / 2 - getPaddingLeft();
+                rParams.leftMargin = viewLeft + mView.getWidth() / 2 - resources.getDimensionPixelOffset(R.dimen.size_25dp) / 2 - getPaddingLeft();
                 arrow.setLayoutParams(rParams);
             }
 

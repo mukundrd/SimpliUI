@@ -63,6 +63,8 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     private int mZoom = -1;
 
+    private int initialZoom = 13;
+
     private MapFragment mMapFragment;
 
     private boolean initializedByUser;
@@ -147,6 +149,10 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         } else {
             updateLocation();
         }
+    }
+
+    public void setInitialZoom(int initialZoom) {
+        this.initialZoom = initialZoom;
     }
 
     public SimpliLocationModel getLocation() {
@@ -288,7 +294,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         if (locationModel != null) {
             LatLng latLngCenter = new LatLng(locationModel.lattitude, locationModel.longitude);
             if (mZoom == -1) {
-                mZoom = 13;
+                mZoom = initialZoom;
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngCenter, mZoom));
             } else {
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLngCenter));
@@ -364,7 +370,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     private void updateLocationInternal(String name, double latitude, double longitude) {
         if (locationModel == null) {
-            Log.v(TAG, "updateLocationInternal new locationModels");
+            Log.v(TAG, "updateLocationInternal new locationModel");
             locationModel = new SimpliLocationModel();
         }
 
