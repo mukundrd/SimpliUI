@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
-import com.trayis.simplimvp.BuildConfig;
-import com.trayis.simplimvp.utils.Logging;
+import com.trayis.simpliui.BuildConfig;
 import com.trayis.simpliui.R;
 
 /**
@@ -36,7 +36,7 @@ public class LocationUtils {
         final LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean enabled = manager.isProviderEnabled(provider);
         if (BuildConfig.DEBUG) {
-            Logging.d(TAG, String.format("%s %b", provider, enabled));
+            Log.d(TAG, String.format("%s %b", provider, enabled));
         }
         return enabled;
     }

@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
+import android.util.Log;
 
-import com.trayis.simplimvp.utils.Logging;
 import com.trayis.simpliui.BuildConfig;
 
 /**
@@ -57,13 +57,13 @@ public abstract class LocationTracker implements LocationListener {
     public final synchronized void startListening() throws SecurityException {
         if (mIsListening) {
             if (BuildConfig.DEBUG) {
-                Logging.i(TAG, "Relax, LocationTracked is already listening for location updates");
+                Log.i(TAG, "Relax, LocationTracked is already listening for location updates");
             }
             return;
         }
 
         if (BuildConfig.DEBUG) {
-            Logging.i(TAG, "LocationTracked is now listening for location updates");
+            Log.i(TAG, "LocationTracked is now listening for location updates");
         }
 
         long timeBetweenUpdates = mTrackerSettings.getTimeBetweenUpdates();
@@ -99,7 +99,7 @@ public abstract class LocationTracker implements LocationListener {
             new Handler().postDelayed(() -> {
                 if (!mIsLocationFound && mIsListening) {
                     if (BuildConfig.DEBUG) {
-                        Logging.i(TAG, "No location found in the meantime");
+                        Log.i(TAG, "No location found in the meantime");
                     }
                     stopListening();
                     onTimeout();
@@ -111,13 +111,13 @@ public abstract class LocationTracker implements LocationListener {
     public final synchronized void stopListening() {
         if (mIsListening) {
             if (BuildConfig.DEBUG) {
-                Logging.i(TAG, "LocationTracked wasn't listening for location updates anyway");
+                Log.i(TAG, "LocationTracked wasn't listening for location updates anyway");
             }
             return;
         }
 
         if (BuildConfig.DEBUG) {
-            Logging.i(TAG, "LocationTracked has stopped listening for location updates");
+            Log.i(TAG, "LocationTracked has stopped listening for location updates");
         }
         mLocationManagerService.removeUpdates(this);
         mIsListening = false;
@@ -139,7 +139,7 @@ public abstract class LocationTracker implements LocationListener {
 
     @Override
     public final void onLocationChanged(@NonNull Location location) {
-        Logging.i(TAG, "Location has changed, new location is " + location);
+        Log.i(TAG, "Location has changed, new location is " + location);
 
         sLocation = new Location(location);
         sLastUpdateTime = System.currentTimeMillis();
@@ -150,28 +150,28 @@ public abstract class LocationTracker implements LocationListener {
 
     public void onProviderError(@NonNull ProviderException providerError) {
         if (BuildConfig.DEBUG) {
-            Logging.w(TAG, "Provider (" + providerError.getProvider() + ")", providerError);
+            Log.w(TAG, "Provider (" + providerError.getProvider() + ")", providerError);
         }
     }
 
     @Override
     public void onProviderEnabled(@NonNull String provider) {
         if (BuildConfig.DEBUG) {
-            Logging.i(TAG, "Provider (" + provider + ") has been enabled");
+            Log.i(TAG, "Provider (" + provider + ") has been enabled");
         }
     }
 
     @Override
     public void onStatusChanged(@NonNull String provider, int status, Bundle extras) {
         if (BuildConfig.DEBUG) {
-            Logging.i(TAG, "Provider (" + provider + ") status has changed, new status is " + status);
+            Log.i(TAG, "Provider (" + provider + ") status has changed, new status is " + status);
         }
     }
 
     @Override
     public void onProviderDisabled(@NonNull String provider) {
         if (BuildConfig.DEBUG) {
-            Logging.i(TAG, "Provider (" + provider + ") has been disabled");
+            Log.i(TAG, "Provider (" + provider + ") has been disabled");
         }
     }
 

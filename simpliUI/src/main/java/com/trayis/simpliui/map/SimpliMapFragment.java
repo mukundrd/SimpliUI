@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
-import com.trayis.simplimvp.utils.Logging;
 import com.trayis.simpliui.R;
 import com.trayis.simpliui.map.location.LocationTracker;
 import com.trayis.simpliui.map.location.LocationUtils;
@@ -71,13 +71,13 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     private AutoCompleteTextView autoComplete;
 
-    // private LatLng mLatLang;
-
     private SimpliLocationModel _locationModel, locationModel;
 
     private OnLocationChangeListener listener;
 
     private ImageView geoAutocompleteClear;
+
+    private ImageView markerIcon;
 
     @Nullable
     @Override
@@ -88,6 +88,8 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         gpsLocationFix = view.findViewById(R.id.gps_location_fix);
         gpsLocationFix.setOnClickListener(this);
 
+        markerIcon = view.findViewById(R.id.marker_icon_view);
+
         autoComplete = view.findViewById(R.id.autoComplete);
         geoAutocompleteClear = view.findViewById(R.id.geo_autocomplete_clear);
 
@@ -95,6 +97,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         autoComplete.setAdapter(new GeoAutoCompleteAdapter(getActivity(), new OnLocationChangeListener() {
             @Override
             public void onLocationChanged(SimpliLocationModel locationModel) {
+                autoComplete.dismissDropDown();
                 onNewLocation(locationModel.lattitude, locationModel.longitude, false);
             }
         })); // 'this' is Activity instance
@@ -128,12 +131,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
             }
         });
 
-        geoAutocompleteClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                autoComplete.setText("");
-            }
-        });
+        geoAutocompleteClear.setOnClickListener(v -> autoComplete.setText(""));
 
         return view;
     }
@@ -163,9 +161,14 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         return autoComplete;
     }
 
+    public ImageView getMarkerIcon() {
+        return markerIcon;
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.gps_location_fix) {
+            Log.v(TAG, "GPS Loc Fix clicked, _locationModel is not null" + (_locationModel != null));
             if (_locationModel != null) {
                 // mLatLang = null;
                 updateLocationInternal(_locationModel.name, _locationModel.lattitude, _locationModel.longitude);
@@ -209,7 +212,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
                 mTracker = new BaseLocationTracker(activity);
                 mTracker.startListening();
             } catch (SecurityException e) {
-                Logging.e(TAG, e.getMessage(), e);
+                Log.e(TAG, e.getMessage(), e);
             }
         }
     }
@@ -264,6 +267,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     public void updateLocation() {
         if (getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
+            Log.v(TAG, "Fragment not resumed, returning");
             return;
         }
 
@@ -293,6 +297,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
                 listener.onLocationChanged(locationModel);
             }
             gpsLocationFix.setVisibility(View.VISIBLE);
+            markerIcon.setVisibility(View.VISIBLE);
         }
     }
 
@@ -359,6 +364,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     private void updateLocationInternal(String name, double latitude, double longitude) {
         if (locationModel == null) {
+            Log.v(TAG, "updateLocationInternal new locationModels");
             locationModel = new SimpliLocationModel();
         }
 

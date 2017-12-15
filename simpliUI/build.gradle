@@ -54,11 +54,6 @@ dependencies {
     api "com.google.android.gms:play-services-maps:$playServicesLib"
     api "com.google.android.gms:play-services-places:$playServicesLib"
 
-    implementation 'com.trayis:simpliMVP:1.0.4'
-
-    implementation "com.trayis:simpliMVPAnnotationProcessor:0.1.6"
-    annotationProcessor "com.trayis:simpliMVPAnnotationProcessor:0.1.6"
-
     implementation "io.reactivex:rxandroid:1.2.1"
 
     testImplementation 'junit:junit:4.12'
