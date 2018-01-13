@@ -1,0 +1,5 @@
+<root>
+    <item name='android.support.v4.app.DialogFragment STYLE_NO_TITLE'>
+        <annotation name='android.support.annotation.Nullable' />
+    </item>
+</root>

@@ -6,16 +6,17 @@ def siteUrl = 'https://gitlab.com/Trayis/SimpliUI'      // Homepage URL of the l
 def gitUrl = 'https://gitlab.com/Trayis/SimpliUI.git'   // Git repository URL
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 27
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion 17
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -25,12 +26,21 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
     lintOptions {
+        disable 'InvalidPackage'
+        disable 'RestrictedApi'
+        disable 'PrivateResource'
+        disable 'CustomViewStyleable'
+
         abortOnError false
     }
 }
@@ -41,14 +51,26 @@ dependencies {
 
     implementation "com.android.support:appcompat-v7:$androidLib"
     implementation "com.android.support:design:$androidLib"
+    implementation "com.android.support:support-compat:$androidLib"
+    implementation "com.android.support:support-v4:$androidLib"
+
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
+
+    api "com.google.android.gms:play-services-maps:$playServicesLib"
+    api "com.google.android.gms:play-services-places:$playServicesLib"
+
+    implementation "io.reactivex:rxandroid:1.2.1"
 
     testImplementation 'junit:junit:4.12'
 
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
 
 group = 'com.trayis'    // Maven Group ID for the artifact
-version = '0.0.3'       // This is the library version used when deploying the artifact
+version = '0.1.1'       // This is the library version used when deploying the artifact
 
 install {
     repositories.mavenInstaller {
@@ -89,7 +111,6 @@ task sourcesJar(type: Jar) {
 }
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
-    //classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'

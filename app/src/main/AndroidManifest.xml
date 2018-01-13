@@ -22,6 +22,12 @@
 
         <activity android:name=".ui.OnboardingActivity" />
 
+        <activity android:name=".ui.LocationActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_geo_id" />
+
     </application>
 
 </manifest>
