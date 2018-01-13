@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.trayis.simpliui.map.SimpliLocationModel;
 import com.trayis.simpliui.map.SimpliMapFragment;
+import com.trayis.simpliui.map.model.SimpliLocationModel;
 import com.trayis.simpliuieg.R;
 
 /**
@@ -30,6 +30,7 @@ public class LocationActivity extends AppCompatActivity implements SimpliMapFrag
         mMapFragment = (SimpliMapFragment) getSupportFragmentManager().findFragmentById(R.id.location_fragment);
         if (mMapFragment != null) {
             mMapFragment.setOnLocationChangeListener(this);
+            mMapFragment.setApiKey(getString(R.string.google_geo_id));
             mMapFragment.getLocation();
         }
     }
@@ -37,5 +38,10 @@ public class LocationActivity extends AppCompatActivity implements SimpliMapFrag
     @Override
     public void onLocationChanged(SimpliLocationModel locationModel) {
         Log.v("LocationActivity", locationModel.toString());
+    }
+
+    @Override
+    public void locationChangeError() {
+
     }
 }

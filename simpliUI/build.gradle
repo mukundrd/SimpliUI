@@ -10,7 +10,7 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -53,6 +53,11 @@ dependencies {
     implementation "com.android.support:design:$androidLib"
     implementation "com.android.support:support-compat:$androidLib"
     implementation "com.android.support:support-v4:$androidLib"
+
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
 
     api "com.google.android.gms:play-services-maps:$playServicesLib"
     api "com.google.android.gms:play-services-places:$playServicesLib"

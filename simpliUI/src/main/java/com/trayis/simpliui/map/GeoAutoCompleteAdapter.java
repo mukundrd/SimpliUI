@@ -1,8 +1,9 @@
 package com.trayis.simpliui.map;
 
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.Typeface;
+import android.text.style.CharacterStyle;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,22 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.trayis.simpliui.R;
+import com.trayis.simpliui.map.model.Geometry;
+import com.trayis.simpliui.map.model.Location;
+import com.trayis.simpliui.map.model.Place;
+import com.trayis.simpliui.map.model.PlacesDetails;
+import com.trayis.simpliui.map.model.PlacesPrediction;
+import com.trayis.simpliui.map.model.Result;
+import com.trayis.simpliui.map.model.SimpliLocationModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by mudesai on 12/7/17.
@@ -23,13 +36,17 @@ import java.util.List;
 
 public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
 
-    private final SimpliMapFragment.OnLocationChangeListener mListener;
-    private Context mContext;
-    private List<GeoSearchResult> resultList = new ArrayList();
+    private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
 
-    public GeoAutoCompleteAdapter(Context context, SimpliMapFragment.OnLocationChangeListener listener) {
+    private SimpliMapFragment.LocationServiceCallback mLocationServiceCallback;
+
+    private Context mContext;
+
+    private List<Place> resultList = new ArrayList();
+
+    public GeoAutoCompleteAdapter(Context context, SimpliMapFragment.LocationServiceCallback callback) {
         mContext = context;
-        mListener = listener;
+        mLocationServiceCallback = callback;
     }
 
     @Override
@@ -38,7 +55,7 @@ public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public GeoSearchResult getItem(int index) {
+    public Place getItem(int index) {
         return resultList.get(index);
     }
 
@@ -54,16 +71,43 @@ public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
             convertView = inflater.inflate(R.layout.geo_search_result_item, parent, false);
         }
 
-        GeoSearchResult item = getItem(position);
+        Place item = getItem(position);
         convertView.setTag(item);
-        ((TextView) convertView.findViewById(R.id.geo_search_result_text)).setText(item.getAddress());
+        ((TextView) convertView.findViewById(R.id.geo_search_primary_text)).setText(item.structured_formatting.main_text);
+        ((TextView) convertView.findViewById(R.id.geo_search_secondary_text)).setText(item.structured_formatting.secondary_text);
         convertView.setOnClickListener(v -> {
-            GeoSearchResult tag = (GeoSearchResult) v.getTag();
-            SimpliLocationModel locationModel = new SimpliLocationModel();
-            locationModel.lattitude = tag.address.getLatitude();
-            locationModel.longitude = tag.address.getLongitude();
-            locationModel.name = tag.address.getLocality();
-            mListener.onLocationChanged(locationModel);
+            Place tag = (Place) v.getTag();
+            Call<PlacesDetails> placeDetails = mLocationServiceCallback.getPlaceDetails(tag.place_id);
+            placeDetails.enqueue(new Callback<PlacesDetails>() {
+                @Override
+                public void onResponse(Call<PlacesDetails> call, Response<PlacesDetails> response) {
+                    if (response.isSuccessful()) {
+                        PlacesDetails placesDetails = response.body();
+                        if (placeDetails != null) {
+                            Result result = placesDetails.result;
+                            if (result != null) {
+                                Geometry geometry = result.geometry;
+                                if (geometry != null) {
+                                    Location location = geometry.location;
+                                    if (location != null) {
+                                        SimpliLocationModel locationModel = new SimpliLocationModel();
+                                        locationModel.lattitude = location.lat;
+                                        locationModel.longitude = location.lng;
+                                        locationModel.name = item.structured_formatting.main_text;
+                                        mLocationServiceCallback.onLocationChanged(locationModel);
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    mLocationServiceCallback.locationChangeError();
+                }
+
+                @Override
+                public void onFailure(Call<PlacesDetails> call, Throwable t) {
+                }
+            });
         });
 
         return convertView;
@@ -76,9 +120,16 @@ public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
                 if (constraint != null) {
-                    List locations = findLocations(mContext, constraint.toString());
+                    List<Place> locations = new ArrayList<>();
+                    try {
+                        Call<PlacesPrediction> places = mLocationServiceCallback.getNewPlacesList(constraint.toString());
+                        Response<PlacesPrediction> execute = places.execute();
+                        PlacesPrediction body = execute.body();
+                        Place[] result = body.predictions;
+                        locations.addAll(Arrays.asList(result));
+                    } catch (IOException e) {
+                    }
 
-                    // Assign the data to the FilterResults
                     filterResults.values = locations;
                     filterResults.count = locations.size();
                 }
@@ -88,7 +139,8 @@ public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 if (results != null && results.count > 0) {
-                    resultList = (List) results.values;
+                    resultList.clear();
+                    resultList.addAll((List) results.values);
                     notifyDataSetChanged();
                 } else {
                     notifyDataSetInvalidated();
@@ -98,28 +150,7 @@ public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
         return filter;
     }
 
-    private List<GeoSearchResult> findLocations(Context context, String query_text) {
-
-        List<GeoSearchResult> geo_search_results = new ArrayList<GeoSearchResult>();
-
-        Geocoder geocoder = new Geocoder(context, context.getResources().getConfiguration().locale);
-        List<Address> addresses = null;
-
-        try {
-            // Getting a maximum of 15 Address that matches the input text
-            addresses = geocoder.getFromLocationName(query_text, 15);
-
-            for (int i = 0; i < addresses.size(); i++) {
-                Address address = (Address) addresses.get(i);
-                if (address.getMaxAddressLineIndex() != -1) {
-                    geo_search_results.add(new GeoSearchResult(address));
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return geo_search_results;
+    public void setLocationServiceCallback(SimpliMapFragment.LocationServiceCallback locationServiceCallback) {
+        mLocationServiceCallback = locationServiceCallback;
     }
 }
