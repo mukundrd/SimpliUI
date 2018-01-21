@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/up_arrow"
+        android:contentDescription="@string/cd_up_arrow"
         android:layout_width="25dp"
         android:layout_height="12.5dp"
         android:adjustViewBounds="true"
@@ -34,7 +35,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="center"
-            android:text="Its here"
+            android:text="@string/its_here"
             android:textColor="#FF444444" />
 
         <FrameLayout
@@ -57,7 +58,7 @@
                 android:focusable="false"
                 android:gravity="center"
                 android:importantForAccessibility="no"
-                android:text="Got it"
+                android:text="@string/got_it"
                 android:textColor="#FF444444" />
         </FrameLayout>
 
@@ -69,7 +70,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="center"
-            android:text="Never show me tips"
+            android:text="@string/never_show"
             android:textColor="#FF444444" />
 
     </LinearLayout>
@@ -77,6 +78,7 @@
     <ImageView
         android:id="@+id/down_arrow"
         android:layout_width="25dp"
+        android:contentDescription="@string/cd_down_arrow"
         android:layout_height="12.5dp"
         android:layout_below="@+id/message_holder"
         android:adjustViewBounds="true"

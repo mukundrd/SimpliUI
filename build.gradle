@@ -1,8 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.archVersion = '1.0.0-rc1'
-    ext.androidLib = '27.0.1'
+    ext {
+        archVersion = '1.0.0-rc1'
+        androidLib = '27.0.2'
+        playServicesLib = '11.6.2'
+
+        siteUrl = 'https://gitlab.com/Trayis/SimpliMVP'      // Homepage URL of the library
+        gitUrl = 'https://gitlab.com/Trayis/SimpliMVP.git'   // Git repository URL
+    }
+
     repositories {
         jcenter()
         mavenCentral()
@@ -18,7 +25,9 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        mavenCentral()
         maven { url 'https://maven.google.com' }
+        maven { url 'http://dl.bintray.com/trayis/android_lib' }
     }
 }
 

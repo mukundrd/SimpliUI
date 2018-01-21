@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="onboarding_arrow_width">20dp</dimen>
-    <dimen name="onboarding_arrow_height">15dp</dimen>
-    <dimen name="size_10dp">5dp</dimen>
-    <dimen name="size_50dp">25dp</dimen>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="size_5dp">5dp</dimen>
+    <dimen name="size_25dp">25dp</dimen>
+    <dimen name="nominal_margin">5dp</dimen>
+    <dimen name="generic_margin">16dp</dimen>
+    <dimen name="auto_complete_result_left_right_margin">10dp</dimen>
 </resources>
