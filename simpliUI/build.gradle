@@ -7,7 +7,7 @@ def gitUrl = 'https://gitlab.com/Trayis/SimpliUI.git'   // Git repository URL
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    buildToolsVersion "$androidLib"
 
     defaultConfig {
         minSdkVersion 17

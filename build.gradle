@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        archVersion = '1.0.0-alpha1'
+        archVersion = '1.0.0-rc1'
         androidLib = '27.0.2'
         playServicesLib = '11.6.2'
 
