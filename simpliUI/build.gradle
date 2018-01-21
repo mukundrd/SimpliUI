@@ -6,12 +6,12 @@ def siteUrl = 'https://gitlab.com/Trayis/SimpliUI'      // Homepage URL of the l
 def gitUrl = 'https://gitlab.com/Trayis/SimpliUI.git'   // Git repository URL
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 27
+    buildToolsVersion "$androidLib"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
