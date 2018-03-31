@@ -1,4 +1,4 @@
-package com.trayis.simpliuieg.ui;
+package com.trayis.simpliuiapp.ui;
 
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.trayis.simpliui.tablayout.SimpliTabLayout;
-import com.trayis.simpliuieg.R;
+import com.trayis.simpliuiapp.R;
 
 public class TabLayoutActivity extends AppCompatActivity {
 

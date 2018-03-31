@@ -1,4 +1,4 @@
-package com.trayis.simpliuieg.ui;
+package com.trayis.simpliuiapp.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.trayis.simpliui.map.SimpliMapFragment;
 import com.trayis.simpliui.map.model.SimpliLocationModel;
-import com.trayis.simpliuieg.R;
+import com.trayis.simpliuiapp.R;
 
 /**
  * Created by mudesai on 12/6/17.

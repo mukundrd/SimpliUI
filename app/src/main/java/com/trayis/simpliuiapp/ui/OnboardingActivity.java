@@ -1,11 +1,11 @@
-package com.trayis.simpliuieg.ui;
+package com.trayis.simpliuiapp.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.trayis.simpliui.onboarding.OnboardingView;
-import com.trayis.simpliuieg.R;
+import com.trayis.simpliuiapp.R;
 
 /**
  * Created by Mukund on 16-07-2017.

@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "$androidLib"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
-        applicationId "com.trayis.examples.bottomtab1"
+        applicationId "com.trayis.simpliuiapp"
         minSdkVersion 17
         targetSdkVersion 27
         versionCode 1
