@@ -5,11 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.view.animation.Interpolator;
 
-public class ValueAnimatorCompatImplHoneycombMr1 extends ValueAnimatorCompat.Impl {
+public class ValueAnimatorCompatImpl extends ValueAnimatorCompat.Impl {
 
     final ValueAnimator mValueAnimator;
 
-    ValueAnimatorCompatImplHoneycombMr1() {
+    ValueAnimatorCompatImpl() {
         mValueAnimator = new ValueAnimator();
     }
 
