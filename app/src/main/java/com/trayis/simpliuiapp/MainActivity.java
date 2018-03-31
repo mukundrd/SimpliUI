@@ -1,4 +1,4 @@
-package com.trayis.simpliuieg;
+package com.trayis.simpliuiapp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,9 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.trayis.simpliuieg.ui.LocationActivity;
-import com.trayis.simpliuieg.ui.OnboardingActivity;
-import com.trayis.simpliuieg.ui.TabLayoutActivity;
+import com.trayis.simpliuiapp.ui.LocationActivity;
+import com.trayis.simpliuiapp.ui.OnboardingActivity;
+import com.trayis.simpliuiapp.ui.TabLayoutActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

@@ -7,7 +7,7 @@ def gitUrl = 'https://gitlab.com/Trayis/SimpliUI.git'   // Git repository URL
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "$androidLib"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 17
@@ -70,7 +70,7 @@ dependencies {
 }
 
 group = 'com.trayis'    // Maven Group ID for the artifact
-version = '0.1.2'       // This is the library version used when deploying the artifact
+version = '0.1.3'       // This is the library version used when deploying the artifact
 
 install {
     repositories.mavenInstaller {

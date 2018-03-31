@@ -1,0 +1,4 @@
+
+json_key_file "./google_play_android_developer.json"
+
+package_name "com.trayis.simpliUI.examples"
