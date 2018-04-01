@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -333,6 +334,10 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     private void updateMap() {
         if (locationModel != null) {
+            autoComplete.setThreshold(Integer.MAX_VALUE);
+            autoComplete.setText(locationModel.name);
+            autoComplete.setThreshold(1);
+            autoComplete.dismissDropDown();
             LatLng latLngCenter = new LatLng(locationModel.lattitude, locationModel.longitude);
             if (mZoom == -1) {
                 mZoom = initialZoom;
@@ -383,7 +388,13 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
                 boolean success = addresses != null && !addresses.isEmpty();
                 if (success) {
                     Address address = addresses.get(0);
-                    updateLocationInternal(address.getSubLocality(), latitude, longitude);
+                    StringBuilder nameBuilder = new StringBuilder();
+                    String name = address.getFeatureName();
+                    if (!TextUtils.isEmpty(name)) {
+                        nameBuilder.append(name + ", ");
+                    }
+                    nameBuilder.append(address.getSubLocality());
+                    updateLocationInternal(nameBuilder.toString(), latitude, longitude);
                 }
 
                 subscriber.onSuccess(success);
