@@ -46,11 +46,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
-import rx.Single;
-import rx.SingleSubscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by mudesai on 12/6/17.
@@ -371,7 +373,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     private void onNewLocation(final double latitude, final double longitude, boolean isFromLocationListener) {
         if (!isValidFragmentState()) return;
-        Single.OnSubscribe<Boolean> subscribe = subscriber -> {
+        SingleOnSubscribe<Boolean> subscribe = subscriber -> {
             try {
                 if (isFromLocationListener) {
                     if (_locationModel == null) {
@@ -403,7 +405,12 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
             }
         };
 
-        Single.create(subscribe).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleSubscriber<Boolean>() {
+        Single.create(subscribe).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Boolean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                
+            }
+
             @Override
             public void onSuccess(Boolean value) {
                 if (value && locationModel != null) {

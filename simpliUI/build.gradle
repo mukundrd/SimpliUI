@@ -54,15 +54,15 @@ dependencies {
     implementation "com.android.support:support-compat:$androidLib"
     implementation "com.android.support:support-v4:$androidLib"
 
-    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
 
     api "com.google.android.gms:play-services-maps:$playServicesLib"
     api "com.google.android.gms:play-services-places:$playServicesLib"
 
-    implementation "io.reactivex:rxandroid:1.2.1"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
 
     testImplementation 'junit:junit:4.12'
 
@@ -70,7 +70,7 @@ dependencies {
 }
 
 group = 'com.trayis'    // Maven Group ID for the artifact
-version = '0.1.4'       // This is the library version used when deploying the artifact
+version = '0.2.0'       // This is the library version used when deploying the artifact
 
 install {
     repositories.mavenInstaller {
