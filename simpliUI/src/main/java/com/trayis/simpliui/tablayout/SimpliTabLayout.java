@@ -104,7 +104,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
     @RestrictTo(LIBRARY_GROUP)
     @IntDef(value = {MODE_SCROLLABLE, MODE_FIXED})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Mode {
+    @interface Mode {
     }
 
     /**
@@ -127,13 +127,21 @@ public class SimpliTabLayout extends HorizontalScrollView {
     @RestrictTo(LIBRARY_GROUP)
     @IntDef(flag = true, value = {GRAVITY_FILL, GRAVITY_CENTER})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TabGravity {
+    @interface TabGravity {
     }
 
     /**
      * Callback interface invoked when a tab's selection state changes.
      */
     public interface OnTabSelectedListener {
+
+        /**
+         * Called before selection of tab to ensure if tab selection allowed.
+         *
+         * @param tab The tab that is to be selected
+         * @return status if tab selection allowed
+         */
+        public boolean isTabSelectionNotAllowed(Tab tab);
 
         /**
          * Called when a tab enters the selected state.
@@ -1022,27 +1030,38 @@ public class SimpliTabLayout extends HorizontalScrollView {
                 animateToTab(tab.getPosition());
             }
         } else {
-            final int newPosition = tab != null ? tab.getPosition() : Tab.INVALID_POSITION;
-            if (updateIndicator) {
-                if ((currentTab == null || currentTab.getPosition() == Tab.INVALID_POSITION)
-                        && newPosition != Tab.INVALID_POSITION) {
-                    // If we don't currently have a tab, just draw the indicator
-                    setScrollPosition(newPosition, 0f, true);
-                } else {
-                    animateToTab(newPosition);
+            if (findIsTabSelectionAllowed(tab)) {
+                final int newPosition = tab != null ? tab.getPosition() : Tab.INVALID_POSITION;
+                if (updateIndicator) {
+                    if ((currentTab == null || currentTab.getPosition() == Tab.INVALID_POSITION)
+                            && newPosition != Tab.INVALID_POSITION) {
+                        // If we don't currently have a tab, just draw the indicator
+                        setScrollPosition(newPosition, 0f, true);
+                    } else {
+                        animateToTab(newPosition);
+                    }
+                    if (newPosition != Tab.INVALID_POSITION) {
+                        setSelectedTabView(newPosition);
+                    }
                 }
-                if (newPosition != Tab.INVALID_POSITION) {
-                    setSelectedTabView(newPosition);
+                if (currentTab != null) {
+                    dispatchTabUnselected(currentTab);
                 }
+                mSelectedTab = tab;
             }
-            if (currentTab != null) {
-                dispatchTabUnselected(currentTab);
-            }
-            mSelectedTab = tab;
             if (tab != null) {
                 dispatchTabSelected(tab);
             }
         }
+    }
+
+    private boolean findIsTabSelectionAllowed(Tab currentTab) {
+        for (int i = mSelectedListeners.size() - 1; i >= 0; i--) {
+            if (mSelectedListeners.get(i).isTabSelectionNotAllowed(currentTab)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void dispatchTabSelected(@NonNull final Tab tab) {
@@ -2063,6 +2082,11 @@ public class SimpliTabLayout extends HorizontalScrollView {
 
         public ViewPagerOnTabSelectedListener(ViewPager viewPager) {
             mViewPager = viewPager;
+        }
+
+        @Override
+        public boolean isTabSelectionNotAllowed(Tab tab) {
+            return false;
         }
 
         @Override
