@@ -23,7 +23,7 @@ public class AnimationUtils {
         return startValue + Math.round(fraction * (endValue - startValue));
     }
 
-    static class AnimationListenerAdapter implements Animation.AnimationListener {
+    public static class AnimationListenerAdapter implements Animation.AnimationListener {
         @Override
         public void onAnimationStart(Animation animation) {
         }

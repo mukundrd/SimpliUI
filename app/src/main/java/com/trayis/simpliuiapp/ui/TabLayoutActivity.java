@@ -1,6 +1,7 @@
 package com.trayis.simpliuiapp.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,19 +10,17 @@ import android.view.View;
 import com.trayis.simpliui.tablayout.SimpliTabLayout;
 import com.trayis.simpliuiapp.R;
 
-public class TabLayoutActivity extends AppCompatActivity {
-
-    private TabLayoutAdapter mAdapter;
+public class TabLayoutActivity extends AppCompatActivity implements SimpliTabLayout.OnTabSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab_layout);
 
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
-        mAdapter = new TabLayoutAdapter();
+        ViewPager mViewPager = findViewById(R.id.container);
+        TabLayoutAdapter mAdapter = new TabLayoutAdapter();
         mViewPager.setAdapter(mAdapter);
-        SimpliTabLayout tabLayout = (SimpliTabLayout) findViewById(R.id.tabs);
+        SimpliTabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setTabMode(SimpliTabLayout.MODE_FIXED);
 
@@ -34,11 +33,32 @@ public class TabLayoutActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab());
 
         //set drawables for each tab
-        tabLayout.getTabAt(0).setIcon(R.drawable.files_tab_drawable);
         tabLayout.getTabAt(1).setIcon(R.drawable.task_tab_drawable);
         tabLayout.getTabAt(2).setIcon(R.drawable.board_tab_drawable);
         tabLayout.getTabAt(3).setIcon(R.drawable.team_tab_drawable);
         tabLayout.getTabAt(4).setIcon(R.drawable.settings_tab_drawable);
+
+        tabLayout.addOnTabSelectedListener(this);
+    }
+
+    @Override
+    public boolean isTabSelectionNotAllowed(SimpliTabLayout.Tab tab) {
+        return tab.getPosition() == 2;
+    }
+
+    @Override
+    public void onTabSelected(SimpliTabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabUnselected(SimpliTabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(SimpliTabLayout.Tab tab) {
+
     }
 
     class TabLayoutAdapter extends PagerAdapter {
@@ -48,7 +68,7 @@ public class TabLayoutActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return false;
         }
     }
