@@ -193,9 +193,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
     int mTabGravity;
     int mMode;
 
-    private OnTabSelectedListener mSelectedListener;
     private final ArrayList<OnTabSelectedListener> mSelectedListeners = new ArrayList<>();
-    private OnTabSelectedListener mCurrentVpSelectedListener;
 
     private ValueAnimatorCompat mScrollAnimator;
 
@@ -681,12 +679,6 @@ public class SimpliTabLayout extends HorizontalScrollView {
             }
         }
 
-        if (mCurrentVpSelectedListener != null) {
-            // If we already have a tab selected listener for the ViewPager, remove it
-            removeOnTabSelectedListener(mCurrentVpSelectedListener);
-            mCurrentVpSelectedListener = null;
-        }
-
         if (viewPager != null) {
             mViewPager = viewPager;
 
@@ -696,10 +688,6 @@ public class SimpliTabLayout extends HorizontalScrollView {
             }
             mPageChangeListener.reset();
             viewPager.addOnPageChangeListener(mPageChangeListener);
-
-            // Now we'll add a tab selected listener to set ViewPager's current item
-            mCurrentVpSelectedListener = new ViewPagerOnTabSelectedListener(viewPager);
-            addOnTabSelectedListener(mCurrentVpSelectedListener);
 
             final PagerAdapter adapter = viewPager.getAdapter();
             if (adapter != null) {
@@ -1048,6 +1036,9 @@ public class SimpliTabLayout extends HorizontalScrollView {
                     dispatchTabUnselected(currentTab);
                 }
                 mSelectedTab = tab;
+                if (tab != null) {
+                    mViewPager.setCurrentItem(tab.getPosition());
+                }
             }
             if (tab != null) {
                 dispatchTabSelected(tab);
@@ -2070,38 +2061,6 @@ public class SimpliTabLayout extends HorizontalScrollView {
 
         void reset() {
             mPreviousScrollState = mScrollState = SCROLL_STATE_IDLE;
-        }
-    }
-
-    /**
-     * A OnTabSelectedListener class which contains the necessary calls back
-     * to the provided ViewPager so that the tab position is kept in sync.
-     */
-    public static class ViewPagerOnTabSelectedListener implements OnTabSelectedListener {
-        private final ViewPager mViewPager;
-
-        public ViewPagerOnTabSelectedListener(ViewPager viewPager) {
-            mViewPager = viewPager;
-        }
-
-        @Override
-        public boolean isTabSelectionNotAllowed(Tab tab) {
-            return false;
-        }
-
-        @Override
-        public void onTabSelected(Tab tab) {
-            mViewPager.setCurrentItem(tab.getPosition());
-        }
-
-        @Override
-        public void onTabUnselected(Tab tab) {
-            // No-op
-        }
-
-        @Override
-        public void onTabReselected(Tab tab) {
-            // No-op
         }
     }
 
