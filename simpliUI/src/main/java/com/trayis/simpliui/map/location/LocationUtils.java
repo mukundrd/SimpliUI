@@ -3,8 +3,8 @@ package com.trayis.simpliui.map.location;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 
 import com.trayis.simpliui.BuildConfig;
@@ -43,8 +43,8 @@ public class LocationUtils {
 
     public static boolean isLocationEnabled(@NonNull Context context) {
         return (sTrackerSettings.shouldUseGPS() && isGpsProviderEnabled(context)) ||
-               (sTrackerSettings.shouldUseNetwork() && isNetworkProviderEnabled(context)) ||
-               (sTrackerSettings.shouldUsePassive() && isPassiveProviderEnabled(context));
+                (sTrackerSettings.shouldUseNetwork() && isNetworkProviderEnabled(context)) ||
+                (sTrackerSettings.shouldUsePassive() && isPassiveProviderEnabled(context));
     }
 
     public static void askEnableProviders(@NonNull final Context context) {

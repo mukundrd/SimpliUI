@@ -34,17 +34,15 @@ import retrofit2.Response;
  * Created by mudesai on 12/7/17.
  */
 
-public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
-
-    private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
+class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
 
     private SimpliMapFragment.LocationServiceCallback mLocationServiceCallback;
 
     private Context mContext;
 
-    private List<Place> resultList = new ArrayList();
+    private ArrayList<Place> resultList = new ArrayList<>();
 
-    public GeoAutoCompleteAdapter(Context context, SimpliMapFragment.LocationServiceCallback callback) {
+    GeoAutoCompleteAdapter(Context context, SimpliMapFragment.LocationServiceCallback callback) {
         mContext = context;
         mLocationServiceCallback = callback;
     }
@@ -68,54 +66,57 @@ public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.geo_search_result_item, parent, false);
+            if (inflater != null) {
+                convertView = inflater.inflate(com.trayis.simpliui.R.layout.geo_search_result_item, parent, false);
+            }
         }
 
         Place item = getItem(position);
         convertView.setTag(item);
-        ((TextView) convertView.findViewById(R.id.geo_search_primary_text)).setText(item.structured_formatting.main_text);
-        ((TextView) convertView.findViewById(R.id.geo_search_secondary_text)).setText(item.structured_formatting.secondary_text);
-        convertView.setOnClickListener(v -> {
-            Place tag = (Place) v.getTag();
-            Call<PlacesDetails> placeDetails = mLocationServiceCallback.getPlaceDetails(tag.place_id);
-            placeDetails.enqueue(new Callback<PlacesDetails>() {
-                @Override
-                public void onResponse(Call<PlacesDetails> call, Response<PlacesDetails> response) {
-                    if (response.isSuccessful()) {
-                        PlacesDetails placesDetails = response.body();
-                        if (placeDetails != null) {
-                            Result result = placesDetails.result;
-                            if (result != null) {
-                                Geometry geometry = result.geometry;
-                                if (geometry != null) {
-                                    Location location = geometry.location;
-                                    if (location != null) {
-                                        SimpliLocationModel locationModel = new SimpliLocationModel();
-                                        locationModel.lattitude = location.lat;
-                                        locationModel.longitude = location.lng;
-                                        locationModel.name = item.structured_formatting.main_text;
-                                        mLocationServiceCallback.onLocationChanged(locationModel);
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    mLocationServiceCallback.locationChangeError();
-                }
-
-                @Override
-                public void onFailure(Call<PlacesDetails> call, Throwable t) {
-                }
-            });
-        });
+        ((TextView) convertView.findViewById(com.trayis.simpliui.R.id.geo_search_primary_text)).setText(item.structured_formatting.main_text);
+        ((TextView) convertView.findViewById(com.trayis.simpliui.R.id.geo_search_secondary_text)).setText(item.structured_formatting.secondary_text);
 
         return convertView;
     }
 
+    void onResultSelected(View v) {
+        final Place tag = (Place) v.getTag();
+        Call<PlacesDetails> placeDetailsCall = mLocationServiceCallback.getPlaceDetails(tag.place_id);
+        placeDetailsCall.enqueue(new Callback<PlacesDetails>() {
+            @Override
+            public void onResponse(Call<PlacesDetails> call, Response<PlacesDetails> response) {
+                if (response.isSuccessful()) {
+                    PlacesDetails placesDetails = response.body();
+                    if (placesDetails != null) {
+                        Result result = placesDetails.result;
+                        if (result != null) {
+                            Geometry geometry = result.geometry;
+                            if (geometry != null) {
+                                Location location = geometry.location;
+                                if (location != null) {
+                                    SimpliLocationModel locationModel = new SimpliLocationModel();
+                                    locationModel.lattitude = location.lat;
+                                    locationModel.longitude = location.lng;
+                                    locationModel.name = tag.structured_formatting.main_text;
+                                    mLocationServiceCallback.onLocationChanged(locationModel);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                mLocationServiceCallback.locationChangeError();
+            }
+
+            @Override
+            public void onFailure(Call<PlacesDetails> call, Throwable t) {
+            }
+        });
+    }
+
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
+        return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
@@ -125,9 +126,12 @@ public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
                         Call<PlacesPrediction> places = mLocationServiceCallback.getNewPlacesList(constraint.toString());
                         Response<PlacesPrediction> execute = places.execute();
                         PlacesPrediction body = execute.body();
-                        Place[] result = body.predictions;
+                        Place[] result = new Place[0];
+                        if (body != null) {
+                            result = body.predictions;
+                        }
                         locations.addAll(Arrays.asList(result));
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
                     }
 
                     filterResults.values = locations;
@@ -147,7 +151,6 @@ public class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
                 }
             }
         };
-        return filter;
     }
 
     public void setLocationServiceCallback(SimpliMapFragment.LocationServiceCallback locationServiceCallback) {

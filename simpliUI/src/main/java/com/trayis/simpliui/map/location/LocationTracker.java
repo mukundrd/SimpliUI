@@ -7,8 +7,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresPermission;
 import android.util.Log;
 
 import com.trayis.simpliui.BuildConfig;
@@ -148,6 +148,19 @@ public abstract class LocationTracker implements LocationListener {
         onLocationFound(location);
     }
 
+    public void onProviderError(@NonNull ProviderException providerError) {
+        if (BuildConfig.DEBUG) {
+            Log.w(TAG, "Provider (" + providerError.getProvider() + ")", providerError);
+        }
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        if (BuildConfig.DEBUG) {
+            Log.i(TAG, "Provider (" + provider + ") has been enabled");
+        }
+    }
+
     @Override
     public void onStatusChanged(@NonNull String provider, int status, Bundle extras) {
         if (BuildConfig.DEBUG) {
@@ -165,9 +178,5 @@ public abstract class LocationTracker implements LocationListener {
     public abstract void onLocationFound(@NonNull Location location);
 
     public abstract void onTimeout();
-
-    public abstract void onProviderError(@NonNull ProviderException providerError);
-
-    public abstract void onProviderEnabled(@NonNull String provider);
 
 }

@@ -1,17 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.trayis.simpliuiapp"
-        minSdkVersion 17
-        targetSdkVersion 27
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         resValue "string", "google_geo_id", "AIzaSyAYn44pp_aau-HLvNWKhF_MLMPNrfp8aDg"
     }
@@ -37,12 +36,12 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation "com.android.support:appcompat-v7:$androidLib"
-    implementation "com.android.support:design:$androidLib"
+    implementation "androidx.appcompat:appcompat:$androidLib"
+    implementation "com.google.android.material:material:1.0.0"
 
     implementation project(':simpliUI')
 
     testImplementation 'junit:junit:4.12'
 
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
