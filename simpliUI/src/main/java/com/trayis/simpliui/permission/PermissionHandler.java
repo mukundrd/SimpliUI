@@ -2,8 +2,8 @@ package com.trayis.simpliui.permission;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import static com.trayis.simpliui.permission.PermissionCallback.PERMISSION_ALREADY_AVAILABLE;
 import static com.trayis.simpliui.permission.PermissionCallback.PERMISSION_REQUESTED;

@@ -6,16 +6,15 @@ def siteUrl = 'https://gitlab.com/Trayis/SimpliUI'      // Homepage URL of the l
 def gitUrl = 'https://gitlab.com/Trayis/SimpliUI.git'   // Git repository URL
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 27
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -49,28 +48,28 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "com.android.support:appcompat-v7:$androidLib"
-    implementation "com.android.support:design:$androidLib"
-    implementation "com.android.support:support-compat:$androidLib"
-    implementation "com.android.support:support-v4:$androidLib"
+    implementation "androidx.appcompat:appcompat:$androidLib"
+    implementation "com.google.android.material:material:1.0.0"
+    implementation "androidx.core:core:1.0.1"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 
-    api "com.google.android.gms:play-services-maps:$playServicesLib"
-    api "com.google.android.gms:play-services-places:$playServicesLib"
+    api "com.google.android.gms:play-services-maps:16.1.0"
+    api "com.google.android.gms:play-services-places:16.0.0"
 
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
 
     testImplementation 'junit:junit:4.12'
 
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
 
 group = 'com.trayis'    // Maven Group ID for the artifact
-version = '0.2.1'       // This is the library version used when deploying the artifact
+version = '1.0.0'       // This is the library version used when deploying the artifact
 
 install {
     repositories.mavenInstaller {

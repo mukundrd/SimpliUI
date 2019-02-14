@@ -3,16 +3,15 @@ package com.trayis.simpliui.map;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.arch.lifecycle.Lifecycle;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -34,6 +33,7 @@ import com.trayis.simpliui.map.api.APIClient;
 import com.trayis.simpliui.map.location.LocationTracker;
 import com.trayis.simpliui.map.location.LocationUtils;
 import com.trayis.simpliui.map.location.ProviderException;
+import com.trayis.simpliui.map.model.Place;
 import com.trayis.simpliui.map.model.PlacesDetails;
 import com.trayis.simpliui.map.model.PlacesPrediction;
 import com.trayis.simpliui.map.model.SimpliLocationModel;
@@ -93,7 +93,10 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
     private ImageView markerIcon;
 
     APIClient.ApiInterface apiService;
+
     private String apiKey;
+
+    private boolean shoulrRequestOnResume = true;
 
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
@@ -101,7 +104,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.layout_fragment_map, container, false);
 
@@ -120,8 +123,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
             public void onLocationChanged(SimpliLocationModel locationModel) {
                 autoComplete.dismissDropDown();
                 autoComplete.setText(locationModel.name, false);
-                mFromSelection = true;
-                onNewLocation(locationModel.lattitude, locationModel.longitude, false);
+                setLocationModel(locationModel);
             }
 
             @Override
@@ -129,7 +131,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
             }
 
             @Override
-            public Call<PlacesPrediction> getNewPlacesList(String place) throws IOException {
+            public Call<PlacesPrediction> getNewPlacesList(String place) {
                 if (_locationModel != null) {
                     return apiService.getPlaces(_locationModel.lattitude + "," + _locationModel.longitude, place, apiKey);
                 }
@@ -146,8 +148,15 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         autoComplete.setAdapter(adapter);
         autoComplete.setOnItemClickListener((adapterView, view1, position, id) -> {
             if (!isValidFragmentState()) return;
-            GeoSearchResult result = (GeoSearchResult) adapterView.getItemAtPosition(position);
-            autoComplete.setText(result.name);
+            Object itemAtPosition = adapterView.getItemAtPosition(position);
+            if (itemAtPosition instanceof GeoSearchResult) {
+                GeoSearchResult result = (GeoSearchResult) itemAtPosition;
+                autoComplete.setText(result.name);
+            } else if (itemAtPosition instanceof Place) {
+                Place place = (Place) itemAtPosition;
+                autoComplete.setText(place.structured_formatting.main_text);
+            }
+            adapter.onResultSelected(view1);
         });
         autoComplete.addTextChangedListener(new TextWatcher() {
 
@@ -176,6 +185,11 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         return view;
     }
 
+    public void setLocationModel(SimpliLocationModel locationModel) {
+        mFromSelection = true;
+        onNewLocation(locationModel.lattitude, locationModel.longitude, false, locationModel.name);
+    }
+
     private boolean isValidFragmentState() {
         return !(getActivity() == null || isRemoving() || isDetached() || isHidden());
     }
@@ -186,7 +200,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
         initMaps();
 
-        if (locationModel == null) {
+        if (locationModel == null && shoulrRequestOnResume) {
             requestPermission();
         } else {
             updateLocation();
@@ -224,7 +238,6 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
                 updateLocationInternal(_locationModel.name, _locationModel.lattitude, _locationModel.longitude);
                 updateLocation();
             }
-            return;
         }
     }
 
@@ -249,7 +262,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
     public void permissionGranted() {
         if (!isValidFragmentState()) return;
         Activity activity = getActivity();
-        if (activity == null || !isResumed()) {
+        if (activity == null) {
             return;
         }
 
@@ -315,10 +328,10 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     public void updateLocation() {
         if (!isValidFragmentState()) return;
-        if (getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
-            Log.v(TAG, "Fragment not resumed, returning");
+        /*if (getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
+            Logging.v(TAG, "Fragment not resumed, returning");
             return;
-        }
+        }*/
 
         if (mMap != null) {
             updateMap();
@@ -361,7 +374,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         Projection projection = mMap != null ? mMap.getProjection() : null;
         if (projection != null) {
             LatLng mLatLang = projection.getVisibleRegion().latLngBounds.getCenter();
-            onNewLocation(mLatLang.latitude, mLatLang.longitude, false);
+            onNewLocation(mLatLang.latitude, mLatLang.longitude, false, null);
         }
     }
 
@@ -371,7 +384,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         mInitializedByUser = i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE;
     }
 
-    private void onNewLocation(final double latitude, final double longitude, boolean isFromLocationListener) {
+    private void onNewLocation(final double latitude, final double longitude, boolean isFromLocationListener, String name) {
         if (!isValidFragmentState()) return;
         SingleOnSubscribe<Boolean> subscribe = subscriber -> {
             try {
@@ -385,35 +398,48 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
                 if (isFromLocationListener && (mInitializedByUser || mFromSelection)) return;
 
-                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                boolean success = addresses != null && !addresses.isEmpty();
-                if (success) {
-                    Address address = addresses.get(0);
-                    StringBuilder nameBuilder = new StringBuilder();
-                    String name = address.getFeatureName();
-                    if (!TextUtils.isEmpty(name)) {
-                        nameBuilder.append(name + ", ");
+                boolean success;
+                if (name != null) {
+                    success = true;
+                    updateLocationInternal(name, latitude, longitude);
+                } else {
+                    Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                    success = addresses != null && !addresses.isEmpty();
+                    if (success) {
+                        Address address = addresses.get(0);
+                        StringBuilder nameBuilder = new StringBuilder();
+                        String featureName = address.getFeatureName();
+                        if (!TextUtils.isEmpty(featureName)) {
+                            nameBuilder.append(featureName + ", ");
+                        }
+                        String subLocality = address.getSubLocality();
+                        if (!TextUtils.isEmpty(subLocality)) {
+                            nameBuilder.append(subLocality);
+                        }
+                        if (isFromLocationListener) {
+                            _locationModel.name = nameBuilder.toString();
+                        }
+                        updateLocationInternal(nameBuilder.toString(), latitude, longitude);
                     }
-                    nameBuilder.append(address.getSubLocality());
-                    updateLocationInternal(nameBuilder.toString(), latitude, longitude);
                 }
-
                 subscriber.onSuccess(success);
             } catch (IOException e) {
                 subscriber.onError(e);
             }
         };
 
-        Single.create(subscribe).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Boolean>() {
+        Single.create(subscribe)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Boolean>() {
             @Override
             public void onSubscribe(Disposable d) {
-                
             }
 
             @Override
             public void onSuccess(Boolean value) {
-                if (value && locationModel != null) {
+                if (value && SimpliMapFragment.this.locationModel != null) {
                     updateLocation();
                 }
             }
@@ -441,6 +467,10 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         this.listener = listener;
     }
 
+    public void requestOnResume(boolean shoulrRequestOnResume) {
+        this.shoulrRequestOnResume = shoulrRequestOnResume;
+    }
+
     protected class BaseLocationTracker extends LocationTracker {
 
         public BaseLocationTracker(@NonNull Context context) throws SecurityException {
@@ -449,7 +479,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
         @Override
         public void onLocationFound(@NonNull Location location) {
-            onNewLocation(location.getLatitude(), location.getLongitude(), true);
+            onNewLocation(location.getLatitude(), location.getLongitude(), true, null);
         }
 
         @Override
@@ -461,10 +491,8 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
         @Override
         public void onProviderError(@NonNull ProviderException providerError) {
-            if (providerError != null) {
-                if (LocationManager.GPS_PROVIDER.equals(providerError.getProvider())) {
-                    LocationUtils.askEnableProviders(getActivity());
-                }
+            if (LocationManager.GPS_PROVIDER.equals(providerError.getProvider()) && isValidFragmentState()) {
+                LocationUtils.askEnableProviders(getActivity());
             }
         }
 
