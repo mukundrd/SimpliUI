@@ -31,7 +31,7 @@ public class PermissionHandler {
     }
 
     public boolean checkIfPermissionIsAvailable(String permission) {
-        return ContextCompat.checkSelfPermission(this.activity, permission) == 0;
+        return ContextCompat.checkSelfPermission(this.activity, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void requestPermission() {
@@ -66,7 +66,7 @@ public class PermissionHandler {
         if (permissions == null || grantResults == null) {
             return;
         }
-        if (permissionCallback != null && grantResults != null && grantResults.length > 0) {
+        if (permissionCallback != null && grantResults.length > 0) {
             int grantResult;
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 grantResult = PermissionCallback.PERMISSION_GRANTED;

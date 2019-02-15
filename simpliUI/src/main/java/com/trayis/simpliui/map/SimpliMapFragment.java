@@ -231,12 +231,16 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
     public void onClick(View v) {
         if (!isValidFragmentState()) return;
         if (v.getId() == R.id.gps_location_fix) {
-            Log.v(TAG, "GPS Loc Fix clicked, _locationModel is not null" + (_locationModel != null));
-            if (_locationModel != null) {
-                // mLatLang = null;
-                mFromSelection = false;
-                updateLocationInternal(_locationModel.name, _locationModel.lattitude, _locationModel.longitude);
-                updateLocation();
+            if (mPermissionHandler.checkIfPermissionIsAvailable(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Log.v(TAG, "GPS Loc Fix clicked, _locationModel is not null" + (_locationModel != null));
+                if (_locationModel != null) {
+                    // mLatLang = null;
+                    mFromSelection = false;
+                    updateLocationInternal(_locationModel.name, _locationModel.lattitude, _locationModel.longitude);
+                    updateLocation();
+                }
+            } else {
+                requestPermission();
             }
         }
     }
