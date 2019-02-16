@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/size_5dp"
     android:background="@drawable/auto_complete_result_background"
-    android:paddingTop="@dimen/size_5dp">
+    android:paddingTop="@dimen/size_5dp"
+    android:paddingBottom="@dimen/size_5dp">
 
     <TextView
         android:id="@+id/geo_search_primary_text"
@@ -12,9 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/auto_complete_result_left_right_margin"
         android:layout_marginRight="@dimen/auto_complete_result_left_right_margin"
-        android:text="Mantri Mall"
         android:textSize="16dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:ignore="SpUsage" />
 
     <TextView
         android:id="@+id/geo_search_secondary_text"
@@ -23,8 +24,8 @@
         android:layout_below="@id/geo_search_primary_text"
         android:layout_marginLeft="@dimen/auto_complete_result_left_right_margin"
         android:layout_marginRight="@dimen/auto_complete_result_left_right_margin"
-        android:text="Malleshwaram, Bangalore"
-        android:textSize="14dp" />
+        android:textSize="14dp"
+        tools:ignore="SpUsage" />
 
     <View
         android:layout_width="match_parent"

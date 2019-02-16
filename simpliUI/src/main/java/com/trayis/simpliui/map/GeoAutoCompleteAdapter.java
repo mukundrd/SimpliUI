@@ -1,9 +1,6 @@
 package com.trayis.simpliui.map;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.text.style.CharacterStyle;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +9,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.trayis.simpliui.R;
 import com.trayis.simpliui.map.model.Geometry;
 import com.trayis.simpliui.map.model.Location;
 import com.trayis.simpliui.map.model.Place;

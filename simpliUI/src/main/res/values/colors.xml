@@ -5,4 +5,5 @@
 
     <color name="defaultOnboardingScrim">#66000000</color>
     <color name="result_item_press">#FFEAEAEA</color>
+    <color name="mapIconColor">#FF30599B</color>
 </resources>

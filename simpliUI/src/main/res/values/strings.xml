@@ -17,4 +17,5 @@
     <string name="cd_location_fix_icon">location fix Icon</string>
     <string name="cd_up_arrow">Up arrow</string>
     <string name="cd_down_arrow">down arrow</string>
+    <string name="geo_fix_cd">Tap to fet location from GPS</string>
 </resources>

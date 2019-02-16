@@ -9,9 +9,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -46,6 +43,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
@@ -72,7 +72,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     private int mZoom = -1;
 
-    private int initialZoom = 13;
+    private int initialZoom = 15;
 
     private MapFragment mMapFragment;
 
@@ -91,8 +91,6 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
     private ImageView geoAutocompleteClear;
 
     private ImageView markerIcon;
-
-    APIClient.ApiInterface apiService;
 
     private String apiKey;
 
@@ -113,10 +111,10 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
         markerIcon = view.findViewById(R.id.marker_icon_view);
 
-        apiService = APIClient.getClient().create(APIClient.ApiInterface.class);
-
         autoComplete = view.findViewById(R.id.autoComplete);
         geoAutocompleteClear = view.findViewById(R.id.geo_autocomplete_clear);
+
+        final APIClient.ApiInterface apiService = APIClient.getClient().create(APIClient.ApiInterface.class);
 
         GeoAutoCompleteAdapter adapter = new GeoAutoCompleteAdapter(getActivity(), new LocationServiceCallback() {
             @Override
