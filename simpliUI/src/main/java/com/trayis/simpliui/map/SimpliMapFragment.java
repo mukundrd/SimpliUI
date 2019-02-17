@@ -237,9 +237,8 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
                     updateLocationInternal(_locationModel.name, _locationModel.lattitude, _locationModel.longitude);
                     updateLocation();
                 }
-            } else {
-                requestPermission();
             }
+            requestPermission();
         }
     }
 
@@ -435,22 +434,22 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Boolean>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-            }
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
 
-            @Override
-            public void onSuccess(Boolean value) {
-                if (value && SimpliMapFragment.this.locationModel != null) {
-                    updateLocation();
-                }
-            }
+                    @Override
+                    public void onSuccess(Boolean value) {
+                        if (value && SimpliMapFragment.this.locationModel != null) {
+                            updateLocation();
+                        }
+                    }
 
-            @Override
-            public void onError(Throwable error) {
-                Log.e(TAG, error.getMessage(), error);
-            }
-        });
+                    @Override
+                    public void onError(Throwable error) {
+                        Log.e(TAG, error.getMessage(), error);
+                    }
+                });
     }
 
     private void updateLocationInternal(String name, double latitude, double longitude) {

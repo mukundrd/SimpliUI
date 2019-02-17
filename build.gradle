@@ -9,10 +9,9 @@ buildscript {
     }
 
     repositories {
+        google()
         jcenter()
         mavenCentral()
-        maven { url 'https://maven.google.com' }
-        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.1'
@@ -23,11 +22,10 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
         mavenCentral()
-        maven { url 'https://maven.google.com' }
         maven { url 'http://dl.bintray.com/trayis/android_lib' }
-        google()
     }
 }
 

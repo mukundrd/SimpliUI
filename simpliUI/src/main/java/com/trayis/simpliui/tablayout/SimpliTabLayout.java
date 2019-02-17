@@ -86,7 +86,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
     /**
      * Scrollable tabs display a subset of tabs at any given moment, and can contain longer tab
      * labels and a larger number of tabs. They are best used for browsing contexts in touch
-     * interfaces when users don’t need to directly compare the tab labels.
+     * interfaces when users do not need to directly compare the tab labels.
      *
      * @see #setTabMode(int)
      * @see #getTabMode()
@@ -95,7 +95,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
 
     /**
      * Fixed tabs display all tabs concurrently and are best used with content that benefits from
-     * quick pivots between tabs. The maximum number of tabs is limited by the view’s width.
+     * quick pivots between tabs. The maximum number of tabs is limited by the view width.
      * Fixed tabs have equal width, based on the widest tab label.
      *
      * @see #setTabMode(int)
@@ -558,7 +558,7 @@ public class SimpliTabLayout extends HorizontalScrollView {
      * with content that benefits from quick pivots between tabs.</li>
      * <li>MODE_SCROLLABLE: Scrollable tabs display a subset of tabs at any given moment,
      * and can contain longer tab labels and a larger number of tabs. They are best used for
-     * browsing contexts in touch interfaces when users don’t need to directly compare the tab
+     * browsing contexts in touch interfaces when users do not need to directly compare the tab
      * labels. This mode is commonly used with a ViewPager.</li>
      * </ul>
      *
