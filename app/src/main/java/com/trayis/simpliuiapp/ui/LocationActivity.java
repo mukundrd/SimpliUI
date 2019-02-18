@@ -30,7 +30,6 @@ public class LocationActivity extends AppCompatActivity implements SimpliMapFrag
         mMapFragment = (SimpliMapFragment) getSupportFragmentManager().findFragmentById(R.id.location_fragment);
         if (mMapFragment != null) {
             mMapFragment.setOnLocationChangeListener(this);
-            mMapFragment.setApiKey(getString(R.string.google_geo_id));
             mMapFragment.getLocation();
         }
     }

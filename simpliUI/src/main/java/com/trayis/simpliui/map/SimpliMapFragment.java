@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,7 +23,8 @@ import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
@@ -46,6 +49,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
@@ -70,41 +74,39 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     private GoogleMap mMap;
 
-    private int mZoom = -1;
+    private MapView mMapView;
 
-    private int initialZoom = 15;
-
-    private MapFragment mMapFragment;
-
-    private boolean mInitializedByUser;
-
-    private boolean mFromSelection;
-
-    private ImageView gpsLocationFix;
-
-    private AutoCompleteTextView autoComplete;
+    private DelayAutoCompleteTextView autoComplete;
 
     private SimpliLocationModel _locationModel, locationModel;
 
     private OnLocationChangeListener listener;
 
-    private ImageView geoAutocompleteClear;
-
-    private ImageView markerIcon;
+    private ImageView geoAutocompleteClear, markerIcon, gpsLocationFix;
 
     private String apiKey;
 
-    private boolean shoulrRequestOnResume = true;
+    private int mZoom = -1, initialZoom = 15;
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
+    private boolean shouldRequestOnResume = true, mInitializedByUser, mFromSelection, mMoveIdle = true;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.layout_fragment_map, container, false);
+
+        FragmentActivity activity = getActivity();
+
+        // Gets the MapView from the XML layout and creates it
+        mMapView = view.findViewById(R.id.map);
+        mMapView.onCreate(savedInstanceState);
+
+        // Gets to GoogleMap from the MapView and does initialization stuff
+        mMapView.getMapAsync(this);
+
+        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
+        MapsInitializer.initialize(activity);
 
         gpsLocationFix = view.findViewById(R.id.gps_location_fix);
         gpsLocationFix.setOnClickListener(this);
@@ -114,9 +116,17 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         autoComplete = view.findViewById(R.id.autoComplete);
         geoAutocompleteClear = view.findViewById(R.id.geo_autocomplete_clear);
 
+        try {
+            ApplicationInfo app = activity.getPackageManager().getApplicationInfo(activity.getPackageName(), PackageManager.GET_META_DATA);
+            Bundle bundle = app.metaData;
+            apiKey = bundle.getString("com.google.android.geo.API_KEY");
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+
         final APIClient.ApiInterface apiService = APIClient.getClient().create(APIClient.ApiInterface.class);
 
-        GeoAutoCompleteAdapter adapter = new GeoAutoCompleteAdapter(getActivity(), new LocationServiceCallback() {
+        GeoAutoCompleteAdapter adapter = new GeoAutoCompleteAdapter(activity, new LocationServiceCallback() {
             @Override
             public void onLocationChanged(SimpliLocationModel locationModel) {
                 autoComplete.dismissDropDown();
@@ -194,15 +204,26 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onResume() {
+        mMapView.onResume();
         super.onResume();
 
-        initMaps();
-
-        if (locationModel == null && shoulrRequestOnResume) {
+        if (locationModel == null && shouldRequestOnResume) {
             requestPermission();
         } else {
             updateLocation();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 
     public void setInitialZoom(int initialZoom) {
@@ -319,15 +340,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
                 .show();
     }
 
-    private void initMaps() {
-        if (!isValidFragmentState()) return;
-        if (mMapFragment == null) {
-            mMapFragment = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map));
-            mMapFragment.getMapAsync(this);
-        }
-    }
-
-    public void updateLocation() {
+    private void updateLocation() {
         if (!isValidFragmentState()) return;
         /*if (getLifecycle().getCurrentState() != Lifecycle.State.RESUMED) {
             Logging.v(TAG, "Fragment not resumed, returning");
@@ -345,16 +358,18 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
         mMap = googleMap;
         mMap.setOnCameraIdleListener(this);
         mMap.setOnCameraMoveStartedListener(this);
+        mMap.setOnCameraIdleListener(this);
         updateMap();
     }
 
-    private void updateMap() {
-        if (locationModel != null) {
+    private synchronized void updateMap() {
+        if (locationModel != null && mMoveIdle) {
             autoComplete.setThreshold(Integer.MAX_VALUE);
             autoComplete.setText(locationModel.name);
             autoComplete.setThreshold(1);
             autoComplete.dismissDropDown();
             LatLng latLngCenter = new LatLng(locationModel.lattitude, locationModel.longitude);
+            Log.v(TAG, "Zoom : " + mZoom + ", Location : " + locationModel.toString());
             if (mZoom == -1) {
                 mZoom = initialZoom;
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngCenter, mZoom));
@@ -371,6 +386,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onCameraIdle() {
+        mMoveIdle = true;
         if (!isValidFragmentState() || !mInitializedByUser) return;
         Projection projection = mMap != null ? mMap.getProjection() : null;
         if (projection != null) {
@@ -381,6 +397,8 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onCameraMoveStarted(int i) {
+        mMoveIdle = false;
+        Log.v(TAG, "Zoom Camera Move : " + i);
         if (!isValidFragmentState()) return;
         mInitializedByUser = i == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE;
     }
@@ -469,7 +487,7 @@ public class SimpliMapFragment extends Fragment implements View.OnClickListener,
     }
 
     public void requestOnResume(boolean shoulrRequestOnResume) {
-        this.shoulrRequestOnResume = shoulrRequestOnResume;
+        this.shouldRequestOnResume = shoulrRequestOnResume;
     }
 
     protected class BaseLocationTracker extends LocationTracker {

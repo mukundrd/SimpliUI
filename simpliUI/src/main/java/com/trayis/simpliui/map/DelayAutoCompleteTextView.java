@@ -3,7 +3,9 @@ package com.trayis.simpliui.map;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
+
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ProgressBar;
