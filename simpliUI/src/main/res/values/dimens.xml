@@ -5,4 +5,5 @@
     <dimen name="nominal_margin">5dp</dimen>
     <dimen name="generic_margin">16dp</dimen>
     <dimen name="auto_complete_result_left_right_margin">10dp</dimen>
+    <dimen name="auto_comple_text_size">16dp</dimen>
 </resources>
