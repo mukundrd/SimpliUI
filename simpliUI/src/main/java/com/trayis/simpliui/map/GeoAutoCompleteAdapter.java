@@ -9,6 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.trayis.simpliui.map.model.AddressComplent;
 import com.trayis.simpliui.map.model.Geometry;
 import com.trayis.simpliui.map.model.Location;
 import com.trayis.simpliui.map.model.Place;
@@ -94,6 +95,7 @@ class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
                                     locationModel.lattitude = location.lat;
                                     locationModel.longitude = location.lng;
                                     locationModel.name = tag.structured_formatting.main_text;
+                                    locationModel.city = getCity(result.address_components);
                                     mLocationServiceCallback.onLocationChanged(locationModel);
                                     return;
                                 }
@@ -108,6 +110,22 @@ class GeoAutoCompleteAdapter extends BaseAdapter implements Filterable {
             public void onFailure(Call<PlacesDetails> call, Throwable t) {
             }
         });
+    }
+
+    private String getCity(AddressComplent[] addressComponents) {
+        if (addressComponents != null && addressComponents.length > 0) {
+            for (AddressComplent addressComplent : addressComponents) {
+                if (addressComplent == null) continue;
+                String[] types = addressComplent.types;
+                if (types != null) {
+                    for (String type : types) {
+                        if ("locality".equalsIgnoreCase(type))
+                            return addressComplent.long_name;
+                    }
+                }
+            }
+        }
+        return "CITY";
     }
 
     @Override
