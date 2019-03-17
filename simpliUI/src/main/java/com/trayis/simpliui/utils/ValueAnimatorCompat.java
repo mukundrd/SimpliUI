@@ -1,9 +1,5 @@
 package com.trayis.simpliui.utils;
 
-/**
- * Created by klogi on 12/23/2015.
- */
-
 import android.view.animation.Interpolator;
 
 /**
@@ -156,12 +152,7 @@ public class ValueAnimatorCompat {
 
     public void addUpdateListener(final ValueAnimatorCompat.AnimatorUpdateListener updateListener) {
         if (updateListener != null) {
-            mImpl.addUpdateListener(new ValueAnimatorCompat.Impl.AnimatorUpdateListenerProxy() {
-                @Override
-                public void onAnimationUpdate() {
-                    updateListener.onAnimationUpdate(ValueAnimatorCompat.this);
-                }
-            });
+            mImpl.addUpdateListener(() -> updateListener.onAnimationUpdate(ValueAnimatorCompat.this));
         } else {
             mImpl.addUpdateListener(null);
         }
@@ -173,12 +164,7 @@ public class ValueAnimatorCompat {
 
     public void setUpdateListener(final AnimatorUpdateListener updateListener) {
         if (updateListener != null) {
-            mImpl.setUpdateListener(new Impl.AnimatorUpdateListenerProxy() {
-                @Override
-                public void onAnimationUpdate() {
-                    updateListener.onAnimationUpdate(ValueAnimatorCompat.this);
-                }
-            });
+            mImpl.setUpdateListener(() -> updateListener.onAnimationUpdate(ValueAnimatorCompat.this));
         } else {
             mImpl.setUpdateListener(null);
         }

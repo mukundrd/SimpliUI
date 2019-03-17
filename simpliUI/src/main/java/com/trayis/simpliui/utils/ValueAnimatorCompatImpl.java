@@ -45,12 +45,7 @@ public class ValueAnimatorCompatImpl extends ValueAnimatorCompat.Impl {
 
     @Override
     public void addUpdateListener(final AnimatorUpdateListenerProxy updateListener) {
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                updateListener.onAnimationUpdate();
-            }
-        });
+        mValueAnimator.addUpdateListener(valueAnimator -> updateListener.onAnimationUpdate());
     }
 
     @Override
@@ -60,12 +55,7 @@ public class ValueAnimatorCompatImpl extends ValueAnimatorCompat.Impl {
 
     @Override
     public void setUpdateListener(final AnimatorUpdateListenerProxy updateListener) {
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                updateListener.onAnimationUpdate();
-            }
-        });
+        mValueAnimator.addUpdateListener(valueAnimator -> updateListener.onAnimationUpdate());
     }
 
     @Override
