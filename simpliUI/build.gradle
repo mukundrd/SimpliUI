@@ -5,11 +5,14 @@ apply plugin: 'com.jfrog.bintray'
 def siteUrl = 'https://gitlab.com/Trayis/SimpliUI'      // Homepage URL of the library
 def gitUrl = 'https://gitlab.com/Trayis/SimpliUI.git'   // Git repository URL
 
+group = 'com.trayis'  // Maven Group ID for the artifact
+version = '1.1.0'     // This is the library version used when deploying the artifact
+
 android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 22
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -67,9 +70,6 @@ dependencies {
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
-
-group = 'com.trayis'    // Maven Group ID for the artifact
-version = '1.0.3'       // This is the library version used when deploying the artifact
 
 install {
     repositories.mavenInstaller {

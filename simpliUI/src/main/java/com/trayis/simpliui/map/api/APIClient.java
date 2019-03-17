@@ -1,5 +1,9 @@
 package com.trayis.simpliui.map.api;
 
+import android.content.ContentProvider;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+
 import com.trayis.simpliui.map.model.PlacesDetails;
 import com.trayis.simpliui.map.model.PlacesPrediction;
 
@@ -19,33 +23,26 @@ import retrofit2.http.Query;
 
 public class APIClient {
 
-    private static Retrofit retrofit;
-
     private static final String baseUrl = "https://maps.googleapis.com/maps/api/";
 
-    public static Retrofit getClient() {
+    public static Retrofit getClient(Context context) {
 
-        if (retrofit == null) {
-            synchronized (baseUrl) {
-                if (retrofit == null) {
-                    HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-                    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-                    OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                            .readTimeout(5, TimeUnit.SECONDS)
-                            .writeTimeout(5, TimeUnit.SECONDS);
-                    builder.addInterceptor(interceptor);
-                    OkHttpClient client = builder.build();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS);
 
-                    retrofit = new Retrofit.Builder()
-                            .baseUrl(baseUrl)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .client(client)
-                            .build();
-                }
-            }
+        if (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
         }
 
-        return retrofit;
+        OkHttpClient client = builder.build();
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
     }
 
     public interface ApiInterface {

@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         applicationId "com.trayis.simpliuiapp"
-        minSdkVersion 21
+        minSdkVersion 22
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
